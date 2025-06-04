@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "cc-core",
+	"version": "${version}",
+	"name": "CC-Core",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/cc-core/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"me.skizzme.cc.CCCore"
+		],
+		"fabric-datagen": [
+			"me.skizzme.cc.CCCoreDataGenerator"
+		],
+		"server": [
+			"me.skizzme.cc.CCCoreServer"
+		]
+	},
+	"mixins": [
+		"cc-core.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
