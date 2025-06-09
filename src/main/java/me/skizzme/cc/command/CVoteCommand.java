@@ -1,13 +1,10 @@
 package me.skizzme.cc.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import me.skizzme.cc.CCCore;
-import me.skizzme.cc.shop.Shop;
-import net.kyori.adventure.text.minimessage.translation.Argument;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;

@@ -1,11 +1,8 @@
 package me.skizzme.cc.shop.category.impl;
 
-import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.CobblemonItems;
-import com.cobblemon.mod.common.item.CobblemonItem;
 import me.skizzme.cc.shop.category.Category;
 import net.minecraft.item.ItemConvertible;
-
 
 import java.util.ArrayList;
 

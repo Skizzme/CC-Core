@@ -1,9 +1,6 @@
 package me.skizzme.cc.util;
 
-import net.minecraft.util.Colors;
-
 import java.awt.*;
-import java.util.Arrays;
 
 public class ColorUtils {
 

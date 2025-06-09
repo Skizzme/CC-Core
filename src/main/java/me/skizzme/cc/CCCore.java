@@ -1,20 +1,15 @@
 package me.skizzme.cc;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.context.CommandContextBuilder;
 import me.skizzme.cc.command.CVoteCommand;
 import me.skizzme.cc.command.ShopCommand;
 import net.fabricmc.api.ModInitializer;
-
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 public class CCCore implements ModInitializer {
 	public static final String MOD_ID = "cc-core";

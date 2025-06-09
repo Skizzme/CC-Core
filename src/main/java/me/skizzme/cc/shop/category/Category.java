@@ -2,7 +2,6 @@ package me.skizzme.cc.shop.category;
 
 import net.minecraft.item.ItemConvertible;
 
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 public abstract class Category {

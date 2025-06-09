@@ -70,6 +70,7 @@ dependencies {
 
 	implementation "net.kyori:adventure-api:4.17.0"
 	implementation "net.kyori:adventure-text-minimessage:4.21.0"
+	implementation "net.impactdev.impactor.api:economy:5.3.0"
 	modImplementation include("net.kyori:adventure-platform-fabric:5.14.1")
 	modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
 
