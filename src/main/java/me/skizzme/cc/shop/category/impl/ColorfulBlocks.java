@@ -16,7 +16,7 @@ public class ColorfulBlocks extends Category {
         super(
                 Text.empty()
                         .append(TextUtils.gradientTextHSB(Color.getHSBColor(0, 0.6f, 0.9f), Color.getHSBColor(0.99f, 0.6f, 0.9f), "Colorful"))
-                        .append(TextUtils.formatted(" &7Blocks")),
+                        .append(TextUtils.formatted(" &8Blocks")),
                 Items.RED_CONCRETE
         );
     }

@@ -8,11 +8,12 @@ import java.util.ArrayList;
 
 public class OresMinerals extends Category {
     public OresMinerals() {
-        super("Ores & Minerals", Items.DIAMOND);
+        super("Ores and Minerals", Items.DIAMOND);
     }
 
     @Override
     public ArrayList<ItemConvertible> getItems() {
+
         return null;
     }
 }

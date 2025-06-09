@@ -15,6 +15,8 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -53,11 +55,6 @@ public abstract class Category {
         int pageOffset = 9 * 4 * pageId;
         boolean availableNextPage = true;
         for (int i = 0; i < 9 * 4; i++) {
-            if (i + pageOffset >= items.size()) {
-                availableNextPage = false;
-                break;
-            }
-
             float itemPrice = 10.0f;
             ItemConvertible item = items.get(i + pageOffset);
             MutableText name = Text.empty();
@@ -79,17 +76,24 @@ public abstract class Category {
                     .display(stack)
                     .onClick((ac) -> {
                         Shop.purchaseItem(() -> displayPage(pageId, ac.getPlayer()), ac.getPlayer(), item.asItem(), itemPrice, 1, ac.getClickType() == ButtonClick.LEFT_CLICK);
+                        ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
                     })
-//                    .onClick((ac) -> ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 1.0f, 1.0f))
                     .build();
 
             builder.set(i, button);
+            if (i + pageOffset >= items.size()-1) {
+                availableNextPage = false;
+                break;
+            }
         }
 
         if (pageId > 0) {
             builder.set(4, 2, GooeyButton.builder()
                     .display(new ItemBuilder(Items.ARROW).name("&cPrevious Page").build())
-                    .onClick((ac) -> this.displayPage(pageId - 1, ac.getPlayer()))
+                    .onClick((ac) -> {
+                        this.displayPage(pageId - 1, ac.getPlayer());
+                        ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
+                    })
                     .build()
             );
         }
@@ -97,7 +101,10 @@ public abstract class Category {
         if (availableNextPage) {
             builder.set(4, 6, GooeyButton.builder()
                     .display(new ItemBuilder(Items.SPECTRAL_ARROW).name("&aNext Page").build())
-                    .onClick((ac) -> this.displayPage(pageId + 1, ac.getPlayer()))
+                    .onClick((ac) -> {
+                        this.displayPage(pageId + 1, ac.getPlayer());
+                        ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
+                    })
                     .build()
             );
         }
@@ -107,14 +114,17 @@ public abstract class Category {
                         .name("&4Back")
                         .build()
                 )
-                .onClick((ac) -> Shop.display(ac.getPlayer()))
+                .onClick((ac) -> {
+                    Shop.display(ac.getPlayer());
+                    ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
+                })
                 .build()
         );
 
         builder.fill(GuiUtils.background());
         GooeyPage page = GooeyPage.builder()
                 .template(builder.build())
-                .title(this.getName())
+                .title(pageId + " - " + this.getName())
                 .build();
 
         return new Tuple<>(page, availableNextPage);

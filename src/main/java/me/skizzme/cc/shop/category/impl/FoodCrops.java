@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class FoodCrops extends Category {
     public FoodCrops() {
-        super("Food & Crops", Items.WHEAT);
+        super("Food and Crops", Items.WHEAT);
     }
 
     @Override

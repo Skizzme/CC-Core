@@ -17,7 +17,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import java.awt.*;
 import java.math.BigDecimal;
@@ -46,7 +49,10 @@ public class Shop {
 
         GooeyButton closeButton = GooeyButton.builder()
                 .display(new ItemBuilder(Items.BARRIER).name("&cClose").build())
-                .onClick(() -> UIManager.closeUI(player))
+                .onClick((ac) -> {
+                    UIManager.closeUI(player);
+                    ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);;
+                })
                 .build();
 
         ChestTemplate.Builder builder = ChestTemplate.builder(5);
@@ -59,13 +65,16 @@ public class Shop {
             Category c = categories[i];
 
             ItemStack stack = new ItemBuilder(c.getDisplay())
-                            .name(c.getName())
-                            .lore(new String[]{""})
+                            .name("&7" + c.getName())
+                            .lore(new String[]{ "&7Click to view" })
                             .build();
 
             GooeyButton button = GooeyButton.builder()
                     .display(stack)
-                    .onClick((ac) -> c.display(ac.getPlayer()))
+                    .onClick((ac) -> {
+                        c.display(ac.getPlayer());
+                        ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);;
+                    })
                     .build();
 
             builder.set(line + 1, linePos + 1 + (3 - lineLength / 2), button);
@@ -101,6 +110,7 @@ public class Shop {
                     )
                     .onClick((ac) -> {
                         purchaseItem(previousPage, player, item, itemPrice, amount + amountOption, buy);
+                        ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
                     })
                     .build();
 
@@ -111,6 +121,7 @@ public class Shop {
                     )
                     .onClick((ac) -> {
                         purchaseItem(previousPage, player, item, itemPrice, Math.max(amount - amountOption, 1), buy);
+                        ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
                     })
                     .build();
 
@@ -123,11 +134,14 @@ public class Shop {
                         .name("&4Back")
                         .build()
                 )
-                .onClick((ac) -> previousPage.run())
+                .onClick((ac) -> {
+                    previousPage.run();
+                    ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
+                })
                 .build()
         );
         builder.set(1, 4, GooeyButton.builder()
-                .display(new ItemBuilder(Items.BARRIER)
+                .display(new ItemBuilder(Items.BOOK)
                         .name("&aConfirm")
                         .build()
                 )
@@ -135,10 +149,26 @@ public class Shop {
                 {
                     try {
                         Account a = EconomyService.instance().account(ac.getPlayer().getUuid()).get();
-                        EconomyTransaction result = a.withdraw(BigDecimal.valueOf(itemPrice * amount));
+                        if (buy) {
+                            EconomyTransaction result = a.withdraw(BigDecimal.valueOf(itemPrice * amount));
 
-                        if (result.result() == EconomyResultType.SUCCESS) {
-                            ac.getPlayer().giveItemStack(ItemBuilder.plain(item, amount));
+                            if (result.result() == EconomyResultType.SUCCESS) {
+                                ac.getPlayer().giveItemStack(ItemBuilder.plain(item, amount));
+                                ac.getPlayer().playSoundToPlayer(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.AMBIENT, 0.4f, 2.0f);
+                                ac.getPlayer().sendMessage(
+                                        Text.empty()
+                                                .append(TextUtils.formatted("&7Successfully purchased &a" + amount + "x &8"))
+                                                .append(item.getName())
+                                                .formatted(Formatting.DARK_GRAY)
+                                                .append(TextUtils.formatted("&7 for &a$" + itemPrice * amount))
+                                );
+                            } else if (result.result() == EconomyResultType.NOT_ENOUGH_FUNDS) {
+                                ac.getPlayer().sendMessage(TextUtils.formatted("&cNot enough funds"));
+                                ac.getPlayer().playSoundToPlayer(SoundEvents.ENTITY_VILLAGER_NO, SoundCategory.AMBIENT, 0.4f, 1.0f);
+                            }
+                        } else {
+                            // TODO
+//                            ac.getPlayer().getInventory().removeStack()
                         }
                     } catch (Exception e) {
 

@@ -2,6 +2,7 @@ package me.skizzme.cc;
 
 import com.mojang.brigadier.CommandDispatcher;
 import me.skizzme.cc.command.CVoteCommand;
+import me.skizzme.cc.command.MoneyCommand;
 import me.skizzme.cc.command.ShopCommand;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -24,6 +25,7 @@ public class CCCore implements ModInitializer {
 	public void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registry, CommandManager.RegistrationEnvironment env) {
 		ShopCommand.register(dispatcher);
 		CVoteCommand.register(dispatcher);
+		MoneyCommand.register(dispatcher);
 		LOGGER.info("Registered commands");
 	}
 }
