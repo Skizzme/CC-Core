@@ -4,8 +4,8 @@ import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.CobblemonItems;
 import com.cobblemon.mod.common.item.CobblemonItem;
 import me.skizzme.cc.shop.category.Category;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.item.Items;
+import net.minecraft.item.ItemConvertible;
+
 
 import java.util.ArrayList;
 
@@ -15,7 +15,7 @@ public class Pokeballs extends Category {
     }
 
     @Override
-    public ArrayList<ItemLike> getItems() {
+    public ArrayList<ItemConvertible> getItems() {
         return null;
     }
 }

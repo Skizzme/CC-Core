@@ -1,8 +1,9 @@
 package me.skizzme.cc.shop.category.impl;
 
 import me.skizzme.cc.shop.category.Category;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.item.Items;
+import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.Items;
+
 
 import java.util.ArrayList;
 
@@ -12,7 +13,7 @@ public class NatureBlocks extends Category {
     }
 
     @Override
-    public ArrayList<ItemLike> getItems() {
+    public ArrayList<ItemConvertible> getItems() {
         return null;
     }
 }

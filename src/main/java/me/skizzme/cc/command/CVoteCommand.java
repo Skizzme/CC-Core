@@ -8,30 +8,29 @@ import me.lucko.fabric.api.permissions.v0.Permissions;
 import me.skizzme.cc.CCCore;
 import me.skizzme.cc.shop.Shop;
 import net.kyori.adventure.text.minimessage.translation.Argument;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 public class CVoteCommand {
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(
-                Commands.literal("cvote")
-                        .requires((s) -> s.hasPermission(4))
+                CommandManager.literal("cvote")
+                        .requires((s) -> s.hasPermissionLevel(4))
                         .then(
-                                Commands.argument("target", EntityArgument.player())
+                                CommandManager.argument("target", EntityArgumentType.player())
                                         .executes(CVoteCommand::run)
                         )
         );
     }
 
-    private static int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private static int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         try {
-            ServerPlayer target = EntityArgument.getPlayer(context, "target");
+            ServerPlayerEntity target = EntityArgumentType.getPlayer(context, "target");
             String command = "padmin givekey %player% 1 Vote Crate".replaceAll("%player%", target.getGameProfile().getName());
-            context.getSource().getServer().getCommands().performPrefixedCommand(context.getSource(), command);
+            context.getSource().getServer().getCommandManager().executeWithPrefix(context.getSource(), command);
         } catch (Exception e) {
             e.printStackTrace();
         }
