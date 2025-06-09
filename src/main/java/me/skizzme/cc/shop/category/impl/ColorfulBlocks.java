@@ -6,9 +6,7 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -26,7 +24,12 @@ public class ColorfulBlocks extends Category {
     @Override
     public ArrayList<ItemConvertible> getItems() {
         ArrayList<ItemConvertible> items = new ArrayList<>();
-        Registries.ITEM_GROUP.get(ItemGroups.COLORED_BLOCKS).getDisplayStacks().forEach((i) -> items.add(i.getItem()));
+        Registries.ITEM_GROUP.get(ItemGroups.COLORED_BLOCKS).getDisplayStacks().forEach((i) -> {
+            if (i.getName().getString().contains("shulker")) {
+                return;
+            }
+            items.add(i.getItem());
+        });
         return items;
     }
 }

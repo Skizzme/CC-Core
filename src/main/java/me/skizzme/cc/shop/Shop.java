@@ -6,13 +6,21 @@ import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import me.skizzme.cc.shop.category.Category;
 import me.skizzme.cc.shop.category.impl.*;
+import me.skizzme.cc.util.GuiUtils;
 import me.skizzme.cc.util.ItemBuilder;
 import me.skizzme.cc.util.TextUtils;
+import net.impactdev.impactor.api.economy.EconomyService;
+import net.impactdev.impactor.api.economy.accounts.Account;
+import net.impactdev.impactor.api.economy.transactions.EconomyTransaction;
+import net.impactdev.impactor.api.economy.transactions.details.EconomyResultType;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 
 import java.awt.*;
+import java.math.BigDecimal;
 
 public class Shop {
 
@@ -80,5 +88,73 @@ public class Shop {
         UIManager.openUIForcefully(player, page);
     }
 
-//    public void p
+    public static void purchaseItem(Runnable previousPage, ServerPlayerEntity player, Item item, float itemPrice, int amount, boolean buy) {
+        ChestTemplate.Builder builder = ChestTemplate.builder(4);
+
+        for (int i = 0; i < 4; i++) {
+            final int amountOption = (int) Math.pow(4, i);
+
+            GooeyButton add = GooeyButton.builder()
+                    .display(new ItemBuilder(Items.GREEN_STAINED_GLASS_PANE)
+                            .name("&aAdd " + amountOption)
+                            .build()
+                    )
+                    .onClick((ac) -> {
+                        purchaseItem(previousPage, player, item, itemPrice, amount + amountOption, buy);
+                    })
+                    .build();
+
+            GooeyButton remove = GooeyButton.builder()
+                    .display(new ItemBuilder(Items.RED_STAINED_GLASS_PANE)
+                            .name("&cRemove  " + amountOption)
+                            .build()
+                    )
+                    .onClick((ac) -> {
+                        purchaseItem(previousPage, player, item, itemPrice, Math.max(amount - amountOption, 1), buy);
+                    })
+                    .build();
+
+            builder.set(1, 5+i, add);
+            builder.set(1, 3-i, remove);
+        }
+
+        builder.set(2, 4, GooeyButton.builder()
+                .display(new ItemBuilder(Items.BARRIER)
+                        .name("&4Back")
+                        .build()
+                )
+                .onClick((ac) -> previousPage.run())
+                .build()
+        );
+        builder.set(1, 4, GooeyButton.builder()
+                .display(new ItemBuilder(Items.BARRIER)
+                        .name("&aConfirm")
+                        .build()
+                )
+                .onClick((ac) ->
+                {
+                    try {
+                        Account a = EconomyService.instance().account(ac.getPlayer().getUuid()).get();
+                        EconomyTransaction result = a.withdraw(BigDecimal.valueOf(itemPrice * amount));
+
+                        if (result.result() == EconomyResultType.SUCCESS) {
+                            ac.getPlayer().giveItemStack(ItemBuilder.plain(item, amount));
+                        }
+                    } catch (Exception e) {
+
+                    }
+                })
+                .build()
+        );
+        builder.fill(GuiUtils.background());
+        GooeyPage page = GooeyPage.builder()
+                .template(builder.build())
+                .title(Text.empty()
+                        .append(buy ? TextUtils.formatted("&9+" + amount + " &8") : TextUtils.formatted("&c-" + amount + " &8"))
+                        .append(item.getName())
+                        .append(TextUtils.formatted(" - &a$" + itemPrice * amount))
+                )
+                .build();
+        UIManager.openUIForcefully(player, page);
+    }
 }

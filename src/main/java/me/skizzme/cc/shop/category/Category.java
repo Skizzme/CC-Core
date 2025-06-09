@@ -2,6 +2,7 @@ package me.skizzme.cc.shop.category;
 
 import ca.landonjw.gooeylibs2.api.UIManager;
 import ca.landonjw.gooeylibs2.api.button.Button;
+import ca.landonjw.gooeylibs2.api.button.ButtonClick;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
@@ -14,7 +15,9 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import java.util.ArrayList;
 
@@ -54,11 +57,17 @@ public abstract class Category {
                 availableNextPage = false;
                 break;
             }
+
+            float itemPrice = 10.0f;
             ItemConvertible item = items.get(i + pageOffset);
+            MutableText name = Text.empty();
+            name.formatted(Formatting.GRAY);
+            name.append(item.asItem().getName());
             ItemStack stack = new ItemBuilder(item)
-                    .name("&7" + Text.translatable(item.asItem().getTranslationKey()))
+                    .name(name)
                     .lore(new String[] {
-                            "&aPurchase Price: &e" + 10,
+                            "",
+                            "&aPurchase Price: &e" + itemPrice,
                             "",
                             "&aLeft-Click &7to buy",
                             "&cRight-Click &7to sell",
@@ -68,7 +77,10 @@ public abstract class Category {
 
             Button button = GooeyButton.builder()
                     .display(stack)
-                    .onClick((ac) -> ac.getPlayer().sendMessage(Text.of("purchase " + ac.getButton().getDisplay().getName())))
+                    .onClick((ac) -> {
+                        Shop.purchaseItem(() -> displayPage(pageId, ac.getPlayer()), ac.getPlayer(), item.asItem(), itemPrice, 1, ac.getClickType() == ButtonClick.LEFT_CLICK);
+                    })
+//                    .onClick((ac) -> ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 1.0f, 1.0f))
                     .build();
 
             builder.set(i, button);

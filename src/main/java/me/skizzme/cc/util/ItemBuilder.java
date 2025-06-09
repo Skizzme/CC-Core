@@ -13,6 +13,12 @@ public class ItemBuilder {
 
     private ItemStack stack;
 
+    public static ItemStack plain(ItemConvertible item, int amount) {
+        ItemStack stack = new ItemStack(item);
+        stack.setCount(amount);
+        return stack;
+    }
+
     public ItemBuilder(ItemConvertible item) {
         this.stack = new ItemStack(item);
         this.hideTooltip();
