@@ -65,7 +65,7 @@ public class Shop {
             Category c = categories[i];
 
             ItemStack stack = new ItemBuilder(c.getDisplay())
-                            .name("&7" + c.getName())
+                            .name(Text.empty().append(c.getName()).formatted(Formatting.GRAY))
                             .lore(new String[]{ "&7Click to view" })
                             .build();
 

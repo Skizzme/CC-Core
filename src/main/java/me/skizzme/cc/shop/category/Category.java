@@ -124,7 +124,7 @@ public abstract class Category {
         builder.fill(GuiUtils.background());
         GooeyPage page = GooeyPage.builder()
                 .template(builder.build())
-                .title(pageId + " - " + this.getName())
+                .title(Text.empty().append(this.getName()).append(Text.literal(" - Pg. " + (pageId+1)).formatted(Formatting.DARK_GRAY)))
                 .build();
 
         return new Tuple<>(page, availableNextPage);
