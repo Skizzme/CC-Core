@@ -18,6 +18,7 @@ public class CVoteCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(
                 CommandManager.literal("cvote")
+                        .requires(Permissions.require(CCCore.PERM_ID + ".admin.cvote", 4))
                         .requires((s) -> s.hasPermissionLevel(4))
                         .then(
                                 CommandManager.argument("target", EntityArgumentType.player())

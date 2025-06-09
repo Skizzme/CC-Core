@@ -13,8 +13,11 @@ import me.skizzme.cc.CCCore;
 import me.skizzme.cc.shop.Shop;
 import me.skizzme.cc.shop.category.Category;
 import me.skizzme.cc.shop.category.impl.*;
+import me.skizzme.cc.util.TextUtils;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+
+import java.awt.*;
 
 public class ShopCommand {
 
