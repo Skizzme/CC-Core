@@ -7,17 +7,13 @@ import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import me.skizzme.cc.shop.category.Category;
 import me.skizzme.cc.shop.category.impl.*;
 import me.skizzme.cc.util.ItemBuilder;
-import net.minecraft.component.ComponentChanges;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.Registries;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class Shop {
 
-    public static void display(ServerPlayerEntity player) {
+    public static void display(ServerPlayer player) {
         Category[] categories = {
                 new BuildingBlocks(),
                 new ColorfulBlocks(),

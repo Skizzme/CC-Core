@@ -2,17 +2,14 @@ package me.skizzme.cc;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContextBuilder;
+import me.skizzme.cc.command.CVoteCommand;
 import me.skizzme.cc.command.ShopCommand;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,16 +24,11 @@ public class CCCore implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		CommandRegistrationCallback.EVENT.register(this::registerCommands);
-
-		System.out.println("TEST");
-
-		ArrayList<ItemConvertible> items = new ArrayList<>();
-		for (Map.Entry<RegistryKey<ItemGroup>, ItemGroup> s : Registries.ITEM_GROUP.getEntrySet()) {
-			System.out.println(s);
-		}
 	}
 
-	public void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registry, CommandManager.RegistrationEnvironment env) {
+	public void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registry, Commands.CommandSelection env) {
 		ShopCommand.register(dispatcher);
+		CVoteCommand.register(dispatcher);
+		LOGGER.info("Registered commands");
 	}
 }

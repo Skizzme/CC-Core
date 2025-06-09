@@ -13,28 +13,21 @@ import me.skizzme.cc.CCCore;
 import me.skizzme.cc.shop.Shop;
 import me.skizzme.cc.shop.category.Category;
 import me.skizzme.cc.shop.category.impl.*;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 
 public class ShopCommand {
 
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
-                CommandManager.literal("shop")
+                Commands.literal("shop")
                         .requires(Permissions.require(CCCore.PERM_ID + ".shop"))
                         .executes(ShopCommand::run)
         );
-        CCCore.LOGGER.info("CC-Core Registered Shop Command");
     }
 
-    private static int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        Shop.display(context.getSource().getPlayerOrThrow());
+    private static int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        Shop.display(context.getSource().getPlayerOrException());
         return 1;
     }
 }

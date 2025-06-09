@@ -20,6 +20,35 @@ repositories {
 	flatDir {
 		dirs 'libs'
 	}
+
+	maven { url "https://jitpack.io" }
+	maven { url "https://cursemaven.com" }
+	maven { url "https://maven.fabricmc.net/" }
+	maven { url "https://maven.architectury.dev/" }
+	maven { url "https://repo.maven.apache.org/maven2/" }
+	maven { url "https://repo.spongepowered.org/maven/" }
+	maven { url "https://repo.essentialsx.net/releases/" }
+	maven { url "https://maven.neoforged.net/releases/" }
+	maven { url "https://files.minecraftforge.net/maven/" }
+	maven { url "https://thedarkcolour.github.io/KotlinForForge/" }
+	maven { url "https://papermc.io/repo/repository/maven-public/" }
+	maven { url "https://maven.impactdev.net/repository/development/" }
+	maven { url "https://maven.impactdev.net/raepository/development" }
+	maven { url "https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc" }
+	maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
+	maven { url "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
+	maven {
+		url "https://maven.nucleoid.xyz/"
+		name = "Nucleoid"
+	}
+	maven {
+		url "https://oss.sonatype.org/content/repositories/snapshots"
+		name = "Sonatype Snapshots"
+	}
+	maven {
+		url "https://s01.oss.sonatype.org/content/repositories/snapshots"
+		name = "Sonatype 01 Snapshots"
+	}
 }
 
 fabricApi {
@@ -30,11 +59,21 @@ fabricApi {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+//	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+//	mappings loom.layered {
+//		it.mappings("net.fabricmc:yarn:${rootProject.yarn_mappings}:v2")
+//	}
+	mappings loom.officialMojangMappings()
+//	mappings loom.layered {
+//		it.mappings("net.fabricmc:yarn:${rootProject.yarn_mappings}:v2")
+//		it.mappings("dev.architectury:yarn-mappings-patch-neoforge:$rootProject.yarn_mappings_patch_neoforge_version")
+//	}
 
+	modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
 	implementation "net.kyori:adventure-api:4.17.0"
 	implementation "net.kyori:adventure-text-minimessage:4.21.0"
 	modImplementation include("net.kyori:adventure-platform-fabric:5.14.1")
+	modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
 
 
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
@@ -44,9 +83,11 @@ dependencies {
 	// "Cobblemon-fabric-1.7.0+1.21.1-main-980d958"
 	modImplementation name: "Cobblemon-fabric-1.6.1+1.21.1_2"
 //	modRuntimeOnly name: "Cobblemon-fabric-1.6.1+1.21.1"
+//	modImplementation("com.cobblemon:mod:${property("cobblemon_version")}")
 
 //	modCompileOnly name: "api-repack-3.1.1-1.21.x"
 	include(modImplementation name: "api-repack-3.1.1-1.21.x")
+
 }
 
 
