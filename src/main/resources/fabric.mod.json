@@ -3,14 +3,10 @@
 	"id": "cc-core",
 	"version": "${version}",
 	"name": "CC-Core",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "The core mod for Cobblemon Cove server",
 	"authors": [
-		"Me!"
+		"Skizzme"
 	],
-	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
-	},
 	"license": "CC0-1.0",
 	"icon": "assets/cc-core/icon.png",
 	"environment": "*",
