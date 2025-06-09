@@ -27,4 +27,8 @@ public class TextUtils {
         return out;
     }
 
+    public static Text formatted(String text) {
+        return Text.literal(text.replace("&", "§").replace("\\§", "\\&"));
+    }
+
 }

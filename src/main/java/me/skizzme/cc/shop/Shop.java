@@ -7,9 +7,12 @@ import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import me.skizzme.cc.shop.category.Category;
 import me.skizzme.cc.shop.category.impl.*;
 import me.skizzme.cc.util.ItemBuilder;
+import me.skizzme.cc.util.TextUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
+
+import java.awt.*;
 
 public class Shop {
 
@@ -54,6 +57,7 @@ public class Shop {
 
             GooeyButton button = GooeyButton.builder()
                     .display(stack)
+                    .onClick((ac) -> c.display(ac.getPlayer()))
                     .build();
 
             builder.set(line + 1, linePos + 1 + (3 - lineLength / 2), button);
@@ -70,8 +74,11 @@ public class Shop {
         builder.set(3, 4, closeButton);
         GooeyPage page = GooeyPage.builder()
                 .template(builder.build())
+                .title(TextUtils.gradientTextRGB(Color.red, Color.blue, "Shop"))
                 .build();
 
         UIManager.openUIForcefully(player, page);
     }
+
+//    public void p
 }

@@ -19,14 +19,19 @@ public class ItemBuilder {
     }
 
     public ItemBuilder name(String name) {
-        this.stack.set(DataComponentTypes.ITEM_NAME, Text.literal(name.replace("&", "§").replace("\\§", "\\&")));
+        this.stack.set(DataComponentTypes.ITEM_NAME, TextUtils.formatted(name));
+        return this;
+    }
+
+    public ItemBuilder name(Text name) {
+        this.stack.set(DataComponentTypes.ITEM_NAME, name);
         return this;
     }
 
     public ItemBuilder lore(String[] lore) {
         ArrayList<Text> lines = new ArrayList<>();
         for (String s : lore) {
-            lines.add(Text.literal(s));
+            lines.add(TextUtils.formatted(s));
         }
         this.stack.set(DataComponentTypes.LORE, new LoreComponent(lines));
         return this;

@@ -1,22 +1,114 @@
 package me.skizzme.cc.shop.category;
 
+import ca.landonjw.gooeylibs2.api.UIManager;
+import ca.landonjw.gooeylibs2.api.button.Button;
+import ca.landonjw.gooeylibs2.api.button.GooeyButton;
+import ca.landonjw.gooeylibs2.api.page.GooeyPage;
+import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
+import me.skizzme.cc.shop.Shop;
+import me.skizzme.cc.util.GuiUtils;
+import me.skizzme.cc.util.ItemBuilder;
+import me.skizzme.cc.util.TextUtils;
+import net.impactdev.impactor.api.utility.collections.mappings.Tuple;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 
 public abstract class Category {
 
-    private String name;
+    private Text name;
     private ItemConvertible display;
 
-    public Category(String name, ItemConvertible display) {
+    public Category(Text name, ItemConvertible display) {
         this.name = name;
+        this.display = display;
+    }
+    public Category(String name, ItemConvertible display) {
+        this.name = TextUtils.formatted(name);
         this.display = display;
     }
 
     public abstract ArrayList<ItemConvertible> getItems();
+    public void display(ServerPlayerEntity player) {
+        displayPage(0, player);
+    }
 
-    public String getName() {
+    private void displayPage(int pageId, ServerPlayerEntity player) {
+        Tuple<GooeyPage, Boolean> pageResult = createPage(pageId, this.getItems());
+        GooeyPage page = pageResult.getFirst();
+
+        UIManager.openUIForcefully(player, page);
+    }
+
+    private Tuple<GooeyPage, Boolean> createPage(final int pageId, final ArrayList<ItemConvertible> items) {
+        ChestTemplate.Builder builder = ChestTemplate.builder(5);
+
+        int pageOffset = 9 * 4 * pageId;
+        boolean availableNextPage = true;
+        for (int i = 0; i < 9 * 4; i++) {
+            if (i + pageOffset >= items.size()) {
+                availableNextPage = false;
+                break;
+            }
+            ItemConvertible item = items.get(i + pageOffset);
+            ItemStack stack = new ItemBuilder(item)
+                    .name("&7" + Text.translatable(item.asItem().getTranslationKey()))
+                    .lore(new String[] {
+                            "&aPurchase Price: &e" + 10,
+                            "",
+                            "&aLeft-Click &7to buy",
+                            "&cRight-Click &7to sell",
+                            ""
+                    })
+                    .build();
+
+            Button button = GooeyButton.builder()
+                    .display(stack)
+                    .onClick((ac) -> ac.getPlayer().sendMessage(Text.of("purchase " + ac.getButton().getDisplay().getName())))
+                    .build();
+
+            builder.set(i, button);
+        }
+
+        if (pageId > 0) {
+            builder.set(4, 2, GooeyButton.builder()
+                    .display(new ItemBuilder(Items.ARROW).name("&cPrevious Page").build())
+                    .onClick((ac) -> this.displayPage(pageId - 1, ac.getPlayer()))
+                    .build()
+            );
+        }
+
+        if (availableNextPage) {
+            builder.set(4, 6, GooeyButton.builder()
+                    .display(new ItemBuilder(Items.SPECTRAL_ARROW).name("&aNext Page").build())
+                    .onClick((ac) -> this.displayPage(pageId + 1, ac.getPlayer()))
+                    .build()
+            );
+        }
+
+        builder.set(4, 4, GooeyButton.builder()
+                .display(new ItemBuilder(Items.BARRIER)
+                        .name("&4Back")
+                        .build()
+                )
+                .onClick((ac) -> Shop.display(ac.getPlayer()))
+                .build()
+        );
+
+        builder.fill(GuiUtils.background());
+        GooeyPage page = GooeyPage.builder()
+                .template(builder.build())
+                .title(this.getName())
+                .build();
+
+        return new Tuple<>(page, availableNextPage);
+    }
+
+    public Text getName() {
         return name;
     }
 
