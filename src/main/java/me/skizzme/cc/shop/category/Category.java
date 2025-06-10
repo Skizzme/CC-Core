@@ -65,6 +65,7 @@ public abstract class Category {
                     .lore(new String[] {
                             "",
                             "&aPurchase Price: &e" + itemPrice,
+                            "&cSell Price: &e" + itemPrice * 0.5f,
                             "",
                             "&aLeft-Click &7to buy",
                             "&cRight-Click &7to sell",
@@ -75,6 +76,9 @@ public abstract class Category {
             Button button = GooeyButton.builder()
                     .display(stack)
                     .onClick((ac) -> {
+                        if (ac.getClickType() != ButtonClick.LEFT_CLICK && ac.getClickType() != ButtonClick.RIGHT_CLICK) {
+                            return;
+                        }
                         Shop.purchaseItem(() -> displayPage(pageId, ac.getPlayer()), ac.getPlayer(), item.asItem(), itemPrice, 1, ac.getClickType() == ButtonClick.LEFT_CLICK);
                         ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
                     })
@@ -91,6 +95,9 @@ public abstract class Category {
             builder.set(4, 2, GooeyButton.builder()
                     .display(new ItemBuilder(Items.ARROW).name("&cPrevious Page").build())
                     .onClick((ac) -> {
+                        if (ac.getClickType() != ButtonClick.LEFT_CLICK && ac.getClickType() != ButtonClick.RIGHT_CLICK) {
+                            return;
+                        }
                         this.displayPage(pageId - 1, ac.getPlayer());
                         ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
                     })
@@ -102,6 +109,9 @@ public abstract class Category {
             builder.set(4, 6, GooeyButton.builder()
                     .display(new ItemBuilder(Items.SPECTRAL_ARROW).name("&aNext Page").build())
                     .onClick((ac) -> {
+                        if (ac.getClickType() != ButtonClick.LEFT_CLICK && ac.getClickType() != ButtonClick.RIGHT_CLICK) {
+                            return;
+                        }
                         this.displayPage(pageId + 1, ac.getPlayer());
                         ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
                     })
@@ -115,6 +125,9 @@ public abstract class Category {
                         .build()
                 )
                 .onClick((ac) -> {
+                    if (ac.getClickType() != ButtonClick.LEFT_CLICK && ac.getClickType() != ButtonClick.RIGHT_CLICK) {
+                        return;
+                    }
                     Shop.display(ac.getPlayer());
                     ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
                 })

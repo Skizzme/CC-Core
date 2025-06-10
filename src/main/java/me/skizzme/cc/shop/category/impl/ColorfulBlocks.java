@@ -25,8 +25,7 @@ public class ColorfulBlocks extends Category {
     public ArrayList<ItemConvertible> getItems() {
         ArrayList<ItemConvertible> items = new ArrayList<>();
         Registries.ITEM_GROUP.get(ItemGroups.COLORED_BLOCKS).getDisplayStacks().forEach((i) -> {
-            System.out.println(i.getName().getString());
-            if (i.getName().getString().contains("shulker")) {
+            if (i.getName().getString().toLowerCase().contains("shulker")) {
                 return;
             }
             items.add(i.getItem());

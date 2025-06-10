@@ -19,18 +19,21 @@ public class FoodCrops extends Category {
     @Override
     public ArrayList<ItemConvertible> getItems() {
         ArrayList<ItemConvertible> items = new ArrayList<>();
-        for (ItemStack i : CobblemonItemGroups.getAGRICULTURE().getDisplayStacks()) {
-            if (i.getItem() == CobblemonItems.ORAN_BERRY) {
-                break;
-            }
-            items.add(i.getItem());
-        }
+
         for (ItemStack i : Registries.ITEM_GROUP.get(ItemGroups.FOOD_AND_DRINK).getDisplayStacks()) {
             if (i.getItem() == Items.ROTTEN_FLESH) {
                 break;
             }
             items.add(i.getItem());
         }
+
+        for (ItemStack i : CobblemonItemGroups.getAGRICULTURE().getDisplayStacks()) {
+            if (i.getItem() == CobblemonItems.ORAN_BERRY) {
+                break;
+            }
+            items.add(i.getItem());
+        }
+
         return items;
     }
 }

@@ -1,6 +1,7 @@
 package me.skizzme.cc.shop;
 
 import ca.landonjw.gooeylibs2.api.UIManager;
+import ca.landonjw.gooeylibs2.api.button.ButtonClick;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
@@ -43,13 +44,12 @@ public class Shop {
                 new Archaeology()
         };
 
-        GooeyButton fillButton = GooeyButton.builder()
-                .display(new ItemBuilder(Items.GRAY_STAINED_GLASS_PANE).hideAllTooltip().build())
-                .build();
-
         GooeyButton closeButton = GooeyButton.builder()
                 .display(new ItemBuilder(Items.BARRIER).name("&cClose").build())
                 .onClick((ac) -> {
+                    if (ac.getClickType() != ButtonClick.LEFT_CLICK && ac.getClickType() != ButtonClick.RIGHT_CLICK) {
+                        return;
+                    }
                     UIManager.closeUI(player);
                     ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);;
                 })
@@ -72,6 +72,9 @@ public class Shop {
             GooeyButton button = GooeyButton.builder()
                     .display(stack)
                     .onClick((ac) -> {
+                        if (ac.getClickType() != ButtonClick.LEFT_CLICK && ac.getClickType() != ButtonClick.RIGHT_CLICK) {
+                            return;
+                        }
                         c.display(ac.getPlayer());
                         ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);;
                     })
@@ -87,7 +90,7 @@ public class Shop {
         }
 
 
-        builder.fill(fillButton);
+        builder.fill(GuiUtils.background());
         builder.set(3, 4, closeButton);
         GooeyPage page = GooeyPage.builder()
                 .template(builder.build())
@@ -109,6 +112,9 @@ public class Shop {
                             .build()
                     )
                     .onClick((ac) -> {
+                        if (ac.getClickType() != ButtonClick.LEFT_CLICK && ac.getClickType() != ButtonClick.RIGHT_CLICK) {
+                            return;
+                        }
                         purchaseItem(previousPage, player, item, itemPrice, amount + amountOption, buy);
                         ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
                     })
@@ -120,6 +126,9 @@ public class Shop {
                             .build()
                     )
                     .onClick((ac) -> {
+                        if (ac.getClickType() != ButtonClick.LEFT_CLICK && ac.getClickType() != ButtonClick.RIGHT_CLICK) {
+                            return;
+                        }
                         purchaseItem(previousPage, player, item, itemPrice, Math.max(amount - amountOption, 1), buy);
                         ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
                     })
@@ -135,6 +144,9 @@ public class Shop {
                         .build()
                 )
                 .onClick((ac) -> {
+                    if (ac.getClickType() != ButtonClick.LEFT_CLICK && ac.getClickType() != ButtonClick.RIGHT_CLICK) {
+                        return;
+                    }
                     previousPage.run();
                     ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
                 })

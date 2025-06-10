@@ -25,7 +25,7 @@ public class Berries extends Category {
                 }
             }
         }
-        System.out.println(items.size());
+
         items.sort(Comparator.comparing(a -> a.asItem().getName().getString()));
         return items;
     }

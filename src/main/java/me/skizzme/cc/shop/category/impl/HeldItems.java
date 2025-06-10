@@ -1,6 +1,7 @@
 package me.skizzme.cc.shop.category.impl;
 
 import com.cobblemon.mod.common.CobblemonItems;
+import com.cobblemon.mod.common.item.CobblemonItem;
 import com.cobblemon.mod.common.item.group.CobblemonItemGroups;
 import me.skizzme.cc.shop.category.Category;
 import net.minecraft.item.ItemConvertible;
@@ -19,6 +20,9 @@ public class HeldItems extends Category {
 
         for (ItemStack i : CobblemonItemGroups.getHELD_ITEMS().getDisplayStacks()) {
             items.add(i.getItem());
+            if (i.getItem() == CobblemonItems.ZOOM_LENS) {
+                break;
+            }
         }
         return items;
     }

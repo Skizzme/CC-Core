@@ -7,7 +7,7 @@ public class GuiUtils {
 
     public static GooeyButton background() {
         return GooeyButton.builder()
-                .display(new ItemBuilder(Items.GRAY_STAINED_GLASS_PANE).hideAllTooltip().build())
+                .display(new ItemBuilder(Items.BLACK_STAINED_GLASS_PANE).hideAllTooltip().build())
                 .build();
     }
 
