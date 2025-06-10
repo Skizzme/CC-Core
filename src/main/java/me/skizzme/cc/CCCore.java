@@ -16,11 +16,15 @@ import net.minecraft.server.command.ServerCommandSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.NumberFormat;
+
 public class CCCore implements ModInitializer {
 	public static final String MOD_ID = "cc-core";
 	public static final String PERM_ID = "cc.core";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+	public static final NumberFormat MONEY_FORMAT = NumberFormat.getCurrencyInstance();
+	public static final NumberFormat INT_FORMAT = NumberFormat.getIntegerInstance();
 
 	@Override
 	public void onInitialize() {

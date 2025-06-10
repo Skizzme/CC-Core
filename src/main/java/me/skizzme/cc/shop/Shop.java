@@ -209,10 +209,10 @@ public class Shop {
                                 ac.getPlayer().playSoundToPlayer(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.AMBIENT, 0.4f, 2.0f);
                                 ac.getPlayer().sendMessage(
                                         Text.empty()
-                                                .append(TextUtils.formatted("&7Successfully purchased &a" + amount + "x &8"))
+                                                .append(TextUtils.formatted("&7Successfully purchased &a" + CCCore.INT_FORMAT.format(amount) + "x &8"))
                                                 .append(item.getName())
                                                 .formatted(Formatting.DARK_GRAY)
-                                                .append(TextUtils.formatted("&7 for &a$" + itemPrice * amount))
+                                                .append(TextUtils.formatted("&7 for &a$" + CCCore.MONEY_FORMAT.format(itemPrice * amount)))
                                 );
                             } else if (result.result() == EconomyResultType.NOT_ENOUGH_FUNDS) {
                                 ac.getPlayer().sendMessage(TextUtils.formatted("&cNot enough funds"));
@@ -232,9 +232,9 @@ public class Shop {
         GooeyPage page = GooeyPage.builder()
                 .template(builder.build())
                 .title(Text.empty()
-                        .append(buy ? TextUtils.formatted("&9+" + amount + " &8") : TextUtils.formatted("&c-" + amount + " &8"))
+                        .append(buy ? TextUtils.formatted("&9+" + CCCore.INT_FORMAT.format(amount) + " &8") : TextUtils.formatted("&c-" + CCCore.INT_FORMAT.format(amount) + " &8"))
                         .append(item.getName())
-                        .append(TextUtils.formatted(" - &a$" + itemPrice * amount))
+                        .append(TextUtils.formatted(" - &a" + CCCore.MONEY_FORMAT.format(itemPrice * amount)))
                 )
                 .build();
         UIManager.openUIForcefully(player, page);
