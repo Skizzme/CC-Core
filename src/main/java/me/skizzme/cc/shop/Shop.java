@@ -5,8 +5,12 @@ import ca.landonjw.gooeylibs2.api.button.ButtonClick;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import me.skizzme.cc.CCCore;
 import me.skizzme.cc.shop.category.Category;
 import me.skizzme.cc.shop.category.impl.*;
+import me.skizzme.cc.util.ConfigUtils;
 import me.skizzme.cc.util.GuiUtils;
 import me.skizzme.cc.util.ItemBuilder;
 import me.skizzme.cc.util.TextUtils;
@@ -15,6 +19,7 @@ import net.impactdev.impactor.api.economy.accounts.Account;
 import net.impactdev.impactor.api.economy.transactions.EconomyTransaction;
 import net.impactdev.impactor.api.economy.transactions.details.EconomyResultType;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -24,25 +29,60 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import java.awt.*;
+import java.io.IOException;
 import java.math.BigDecimal;
 
 public class Shop {
 
+    private static JsonObject prices;
+    private static final String PRICE_CONFIG_PATH = "shop_prices.json";
+
+    private static final Category[] categories = {
+            new BuildingBlocks(),
+            new ColorfulBlocks(),
+            new NatureBlocks(),
+            new FoodCrops(),
+            new OresMinerals(),
+            new MiscItems(),
+            new Berries(),
+            new EvolutionItems(),
+            new Consumables(),
+            new HeldItems(),
+            new Pokeballs(),
+            new Archaeology()
+    };
+
+    public static void loadConfig() {
+        CCCore.LOGGER.info("Loading shop prices");
+        try {
+            prices = ConfigUtils.readFileThrowing(PRICE_CONFIG_PATH);
+            CCCore.LOGGER.info("Loaded " + prices.size() + " shop prices");
+        } catch (IOException e) {
+            CCCore.LOGGER.info("Shop prices not found, initializing default prices");
+            prices = new JsonObject();
+            for (Category c : categories) {
+                if (c.getItems() == null) continue;
+
+                for (ItemConvertible i : c.getItems()) {
+                    prices.addProperty(i.asItem().getTranslationKey(), 1.0);
+                }
+            }
+            ConfigUtils.writeFile(PRICE_CONFIG_PATH, prices);
+            CCCore.LOGGER.info("Initialized " + prices.size() + " shop prices");
+        }
+    }
+
+    public static float getItemPrice(ItemConvertible item) {
+        JsonElement result = prices.get(item.asItem().getTranslationKey());
+        if (result == null || result.isJsonNull()) {
+            prices.addProperty(item.asItem().getTranslationKey(), 1.0);
+            ConfigUtils.writeFile(PRICE_CONFIG_PATH, prices);
+            return getItemPrice(item);
+        }
+        return result.getAsFloat();
+    }
+
     public static void display(ServerPlayerEntity player) {
-        Category[] categories = {
-                new BuildingBlocks(),
-                new ColorfulBlocks(),
-                new NatureBlocks(),
-                new FoodCrops(),
-                new OresMinerals(),
-                new MiscItems(),
-                new Berries(),
-                new EvolutionItems(),
-                new Consumables(),
-                new HeldItems(),
-                new Pokeballs(),
-                new Archaeology()
-        };
 
         GooeyButton closeButton = GooeyButton.builder()
                 .display(new ItemBuilder(Items.BARRIER).name("&cClose").build())

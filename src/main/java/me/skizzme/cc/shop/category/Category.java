@@ -55,8 +55,8 @@ public abstract class Category {
         int pageOffset = 9 * 4 * pageId;
         boolean availableNextPage = true;
         for (int i = 0; i < 9 * 4; i++) {
-            float itemPrice = 10.0f;
             ItemConvertible item = items.get(i + pageOffset);
+            float itemPrice = Shop.getItemPrice(item);
             MutableText name = Text.empty();
             name.formatted(Formatting.GRAY);
             name.append(item.asItem().getName());
