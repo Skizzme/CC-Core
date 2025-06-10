@@ -4,21 +4,19 @@ import com.google.gson.JsonObject;
 import me.skizzme.cc.CCCore;
 import net.fabricmc.loader.api.FabricLoader;
 
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-public class ConfigUtils {
+public class FileUtils {
 
-    public static Path configDir() {
-        return FabricLoader.getInstance().getConfigDir().resolve("cc-core");
+    public static Path getModFolder() {
+        return FabricLoader.getInstance().getGameDir().resolve("mods").resolve(CCCore.MOD_ID);
     }
 
     public static void writeFile(String path, JsonObject contents) {
-        Path p = configDir().resolve(path);
+        Path p = getModFolder().resolve(path);
         try {
             if (!Files.exists(p.getParent())) {
                 Files.createDirectories(p.getParent());
@@ -29,13 +27,28 @@ public class ConfigUtils {
         }
     }
 
+    public static void appendFile(String path, String append) {
+        Path p = getModFolder().resolve(path);
+        try {
+            if (!Files.exists(p.getParent())) {
+                Files.createDirectories(p.getParent());
+            }
+            if (!Files.exists(p)) {
+                Files.createFile(p);
+            }
+            Files.writeString(p, append, StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static JsonObject readFileThrowing(String path) throws IOException {
-        Path p = configDir().resolve(path);
+        Path p = getModFolder().resolve(path);
         return CCCore.GSON.fromJson(Files.readString(p), JsonObject.class);
     }
 
     public static JsonObject readFile(String path) {
-        Path p = configDir().resolve(path);
+        Path p = getModFolder().resolve(path);
         if (!Files.exists(p)) {
             writeFile(path, new JsonObject());
             return new JsonObject();

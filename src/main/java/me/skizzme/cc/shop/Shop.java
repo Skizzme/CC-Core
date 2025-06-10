@@ -8,16 +8,20 @@ import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.skizzme.cc.CCCore;
+import me.skizzme.cc.listeners.TransactionListener;
 import me.skizzme.cc.shop.category.Category;
 import me.skizzme.cc.shop.category.impl.*;
 import me.skizzme.cc.util.ConfigUtils;
 import me.skizzme.cc.util.GuiUtils;
 import me.skizzme.cc.util.ItemBuilder;
 import me.skizzme.cc.util.TextUtils;
+import net.impactdev.impactor.api.Impactor;
 import net.impactdev.impactor.api.economy.EconomyService;
 import net.impactdev.impactor.api.economy.accounts.Account;
+import net.impactdev.impactor.api.economy.events.EconomyTransactionEvent;
 import net.impactdev.impactor.api.economy.transactions.EconomyTransaction;
 import net.impactdev.impactor.api.economy.transactions.details.EconomyResultType;
+import net.impactdev.impactor.api.events.ImpactorEventBus;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
@@ -229,6 +233,9 @@ public class Shop {
                             // TODO
 //                            ac.getPlayer().getInventory().removeStack()
                             int removed = Inventories.remove(ac.getPlayer().getInventory(), (s) -> s.getItem() == item, amount, false);
+                            if (removed == 0) {
+                                return;
+                            }
                             float deposit = itemPrice * sellPercent * removed;
                             EconomyTransaction result = a.deposit(BigDecimal.valueOf(deposit));
                             ac.getPlayer().sendMessage(

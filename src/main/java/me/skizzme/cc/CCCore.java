@@ -7,6 +7,7 @@ import me.skizzme.cc.command.CVoteCommand;
 import me.skizzme.cc.command.MoneyCommand;
 import me.skizzme.cc.command.ShopCommand;
 import me.skizzme.cc.shop.Shop;
+import me.skizzme.cc.util.FileUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
@@ -29,6 +30,7 @@ public class CCCore implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		CommandRegistrationCallback.EVENT.register(this::registerCommands);
+		System.out.println("mod path: " + FileUtils.getModFolder());
 	}
 
 	public void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registry, CommandManager.RegistrationEnvironment env) {
