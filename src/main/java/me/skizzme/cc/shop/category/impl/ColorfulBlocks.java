@@ -32,4 +32,9 @@ public class ColorfulBlocks extends Category {
         });
         return items;
     }
+
+    @Override
+    public boolean isSellable(ItemConvertible item) {
+        return false;
+    }
 }

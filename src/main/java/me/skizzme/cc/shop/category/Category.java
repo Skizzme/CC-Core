@@ -38,6 +38,8 @@ public abstract class Category {
     }
 
     public abstract ArrayList<ItemConvertible> getItems();
+    public abstract boolean isSellable(ItemConvertible item);
+
     public void display(ServerPlayerEntity player) {
         displayPage(0, player);
     }
@@ -56,6 +58,7 @@ public abstract class Category {
         boolean availableNextPage = true;
         for (int i = 0; i < 9 * 4; i++) {
             ItemConvertible item = items.get(i + pageOffset);
+            boolean sellable = isSellable(item);
             float itemPrice = Shop.getItemPrice(item);
             MutableText name = Text.empty();
             name.formatted(Formatting.GRAY);
@@ -65,10 +68,10 @@ public abstract class Category {
                     .lore(new String[] {
                             "",
                             "&aPurchase Price: &e" + itemPrice,
-                            "&cSell Price: &e" + itemPrice * 0.5f,
+                            sellable ? "&cSell Price: &e" + itemPrice * 0.5f : "&cNot sellable",
                             "",
                             "&aLeft-Click &7to buy",
-                            "&cRight-Click &7to sell",
+                            sellable ? "&cRight-Click &7to sell" : "",
                             ""
                     })
                     .build();
@@ -79,7 +82,7 @@ public abstract class Category {
                         if (ac.getClickType() != ButtonClick.LEFT_CLICK && ac.getClickType() != ButtonClick.RIGHT_CLICK) {
                             return;
                         }
-                        Shop.itemTransaction(() -> displayPage(pageId, ac.getPlayer()), ac.getPlayer(), item.asItem(), itemPrice, 1, ac.getClickType() == ButtonClick.LEFT_CLICK);
+                        Shop.itemTransaction(() -> displayPage(pageId, ac.getPlayer()), ac.getPlayer(), item.asItem(), itemPrice, 1, ac.getClickType() == ButtonClick.LEFT_CLICK || !sellable);
                         ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
                     })
                     .build();

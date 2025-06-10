@@ -26,4 +26,9 @@ public class HeldItems extends Category {
         }
         return items;
     }
+
+    @Override
+    public boolean isSellable(ItemConvertible item) {
+        return true;
+    }
 }

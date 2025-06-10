@@ -23,4 +23,9 @@ public class EvolutionItems extends Category {
         }
         return items;
     }
+
+    @Override
+    public boolean isSellable(ItemConvertible item) {
+        return true;
+    }
 }

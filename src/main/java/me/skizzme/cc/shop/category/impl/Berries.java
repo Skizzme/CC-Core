@@ -29,4 +29,9 @@ public class Berries extends Category {
         items.sort(Comparator.comparing(a -> a.asItem().getName().getString()));
         return items;
     }
+
+    @Override
+    public boolean isSellable(ItemConvertible item) {
+        return true;
+    }
 }

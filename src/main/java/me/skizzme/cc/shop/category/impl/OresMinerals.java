@@ -9,6 +9,8 @@ import net.minecraft.item.Items;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+import static net.minecraft.item.Items.*;
 
 public class OresMinerals extends Category {
     public OresMinerals() {
@@ -17,24 +19,32 @@ public class OresMinerals extends Category {
 
     @Override
     public ArrayList<ItemConvertible> getItems() {
-        ArrayList<ItemConvertible> items = new ArrayList<>();
-//        for (Field f : Items.class.getDeclaredFields()) {
-//            try {
-//                Item item = (Item) f.get(null);
-//                String checkName = item.getName().getString().toLowerCase();
-//                if (checkName.contains("coal") || checkName.contains("iron") || checkName.contains("copper") || checkName.contains("iron") ||
-//                        checkName.contains("lapis") || checkName.contains("diamond") || checkName.contains("emerald") || checkName.contains("redstone")
-//                ) {
-//                    if (checkName.contains("ore")) {
-//                        item.
-//                        items.add(item);
-//                    }
-//                }
-//            } catch (IllegalAccessException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//        items.sort(Comparator.comparing(a -> a.asItem().getName().getString()));
+        ArrayList<ItemConvertible> items = new ArrayList<>(List.of(
+                IRON_BLOCK,
+                GOLD_BLOCK,
+                DIAMOND_BLOCK,
+                EMERALD_BLOCK,
+                NETHERITE_BLOCK,
+                REDSTONE_BLOCK,
+                LAPIS_BLOCK,
+                AMETHYST_BLOCK,
+                BUDDING_AMETHYST,
+                IRON_INGOT,
+                GOLD_INGOT,
+                DIAMOND,
+                EMERALD,
+                NETHERITE_INGOT,
+                REDSTONE,
+                LAPIS_LAZULI,
+                SMALL_AMETHYST_BUD,
+                MEDIUM_AMETHYST_BUD
+        ));
+
         return items;
+    }
+
+    @Override
+    public boolean isSellable(ItemConvertible item) {
+        return true;
     }
 }

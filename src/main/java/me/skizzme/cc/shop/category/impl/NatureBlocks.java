@@ -17,8 +17,14 @@ public class NatureBlocks extends Category {
     public ArrayList<ItemConvertible> getItems() {
         ArrayList<ItemConvertible> items = new ArrayList<>();
         Registries.ITEM_GROUP.get(ItemGroups.NATURAL).getDisplayStacks().forEach((i) -> {
+            if (i.getItem() == Items.BEDROCK || i.getName().getString().toLowerCase().contains("ore")) return;
             items.add(i.getItem());
         });
         return items;
+    }
+
+    @Override
+    public boolean isSellable(ItemConvertible item) {
+        return true;
     }
 }
