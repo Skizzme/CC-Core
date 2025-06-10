@@ -18,6 +18,7 @@ import net.impactdev.impactor.api.economy.EconomyService;
 import net.impactdev.impactor.api.economy.accounts.Account;
 import net.impactdev.impactor.api.economy.transactions.EconomyTransaction;
 import net.impactdev.impactor.api.economy.transactions.details.EconomyResultType;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
@@ -140,8 +141,9 @@ public class Shop {
         UIManager.openUIForcefully(player, page);
     }
 
-    public static void purchaseItem(Runnable previousPage, ServerPlayerEntity player, Item item, float itemPrice, int amount, boolean buy) {
+    public static void itemTransaction(Runnable previousPage, ServerPlayerEntity player, Item item, float itemPrice, int amount, boolean buy) {
         ChestTemplate.Builder builder = ChestTemplate.builder(4);
+        float sellPercent = 0.5f;
 
         for (int i = 0; i < 4; i++) {
             final int amountOption = (int) Math.pow(4, i);
@@ -155,7 +157,11 @@ public class Shop {
                         if (ac.getClickType() != ButtonClick.LEFT_CLICK && ac.getClickType() != ButtonClick.RIGHT_CLICK) {
                             return;
                         }
-                        purchaseItem(previousPage, player, item, itemPrice, amount + amountOption, buy);
+                        int newAmount = amount + amountOption;
+                        if (!buy) {
+                            newAmount = Math.min(newAmount, player.getInventory().count(item));
+                        }
+                        itemTransaction(previousPage, player, item, itemPrice, newAmount, buy);
                         ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
                     })
                     .build();
@@ -169,7 +175,8 @@ public class Shop {
                         if (ac.getClickType() != ButtonClick.LEFT_CLICK && ac.getClickType() != ButtonClick.RIGHT_CLICK) {
                             return;
                         }
-                        purchaseItem(previousPage, player, item, itemPrice, Math.max(amount - amountOption, 1), buy);
+
+                        itemTransaction(previousPage, player, item, itemPrice, Math.max(amount - amountOption, 1), buy);
                         ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
                     })
                     .build();
@@ -209,10 +216,10 @@ public class Shop {
                                 ac.getPlayer().playSoundToPlayer(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.AMBIENT, 0.4f, 2.0f);
                                 ac.getPlayer().sendMessage(
                                         Text.empty()
-                                                .append(TextUtils.formatted("&7Successfully purchased &a" + CCCore.INT_FORMAT.format(amount) + "x &8"))
+                                                .append(TextUtils.formatted("&7Successfully &9purchased &a" + CCCore.INT_FORMAT.format(amount) + "x &8"))
                                                 .append(item.getName())
                                                 .formatted(Formatting.DARK_GRAY)
-                                                .append(TextUtils.formatted("&7 for &a$" + CCCore.MONEY_FORMAT.format(itemPrice * amount)))
+                                                .append(TextUtils.formatted("&7 for &a" + CCCore.MONEY_FORMAT.format(itemPrice * amount)))
                                 );
                             } else if (result.result() == EconomyResultType.NOT_ENOUGH_FUNDS) {
                                 ac.getPlayer().sendMessage(TextUtils.formatted("&cNot enough funds"));
@@ -221,6 +228,18 @@ public class Shop {
                         } else {
                             // TODO
 //                            ac.getPlayer().getInventory().removeStack()
+                            int removed = Inventories.remove(ac.getPlayer().getInventory(), (s) -> s.getItem() == item, amount, false);
+                            float deposit = itemPrice * sellPercent * removed;
+                            EconomyTransaction result = a.deposit(BigDecimal.valueOf(deposit));
+                            ac.getPlayer().sendMessage(
+                                    Text.empty()
+                                            .append(TextUtils.formatted("&7Successfully &csold &a" + CCCore.INT_FORMAT.format(removed) + "x &8"))
+                                            .append(item.getName())
+                                            .formatted(Formatting.DARK_GRAY)
+                                            .append(TextUtils.formatted("&7 for &a" + CCCore.MONEY_FORMAT.format(deposit)))
+                            );
+                            ac.getPlayer().getInventory().updateItems();
+                            itemTransaction(previousPage, player, item, itemPrice, amount, buy);
                         }
                     } catch (Exception e) {
 
