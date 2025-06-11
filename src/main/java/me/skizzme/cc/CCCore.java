@@ -3,14 +3,15 @@ package me.skizzme.cc;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.CommandDispatcher;
+import me.skizzme.cc.chunkgen.ChunkGenerator;
 import me.skizzme.cc.command.CVoteCommand;
+import me.skizzme.cc.command.ChunkGenCommand;
 import me.skizzme.cc.command.MoneyCommand;
 import me.skizzme.cc.command.ShopCommand;
-import me.skizzme.cc.shop.Shop;
-import me.skizzme.cc.util.FileUtils;
+import me.skizzme.cc.stats.Statistics;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -27,16 +28,25 @@ public class CCCore implements ModInitializer {
 	public static final NumberFormat MONEY_FORMAT = NumberFormat.getCurrencyInstance();
 	public static final NumberFormat INT_FORMAT = NumberFormat.getIntegerInstance();
 
+	public static long TOTAL_CHUNK_GEN = 0;
+
 	@Override
 	public void onInitialize() {
 		CommandRegistrationCallback.EVENT.register(this::registerCommands);
-		System.out.println("mod path: " + FileUtils.getModFolder());
+		ServerChunkEvents.CHUNK_GENERATE.register((world, chunk) -> {
+			System.out.println("[ChunkGen] " + chunk.getPos());
+			TOTAL_CHUNK_GEN++;
+		});
+
+		Statistics.register("totalChunkGen", () -> (double) TOTAL_CHUNK_GEN);
+		Statistics.register("totalChunkPreGen", () -> (double) ChunkGenerator.TOTAL_PRE_GEN);
 	}
 
 	public void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registry, CommandManager.RegistrationEnvironment env) {
 		ShopCommand.register(dispatcher);
 		CVoteCommand.register(dispatcher);
 		MoneyCommand.register(dispatcher);
+		ChunkGenCommand.register(dispatcher);
 		LOGGER.info("Registered commands");
 	}
 }

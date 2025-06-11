@@ -11,6 +11,8 @@ import me.skizzme.cc.shop.Shop;
 import me.skizzme.cc.util.TextUtils;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.world.ChunkTicketType;
+import net.minecraft.world.chunk.ChunkLoader;
 
 public class ShopCommand {
 
@@ -40,6 +42,7 @@ public class ShopCommand {
     }
 
     private static int runArg1(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+
         String sub = StringArgumentType.getString(context, "action").toLowerCase();
         if (sub.equals("reload")) {
             context.getSource().sendMessage(TextUtils.formatted("&7Reloading..."));
