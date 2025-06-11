@@ -55,11 +55,13 @@ public abstract class Category {
         ChestTemplate.Builder builder = ChestTemplate.builder(5);
 
         int pageOffset = 9 * 4 * pageId;
+        int slot = 0;
         boolean availableNextPage = true;
         for (int i = 0; i < 9 * 4; i++) {
             ItemConvertible item = items.get(i + pageOffset);
             boolean sellable = isSellable(item);
             float itemPrice = Shop.getItemPrice(item);
+            boolean purchasable = itemPrice == 0.0f;
             MutableText name = Text.empty();
             name.formatted(Formatting.GRAY);
             name.append(item.asItem().getName());
@@ -67,10 +69,10 @@ public abstract class Category {
                     .name(name)
                     .lore(new String[] {
                             "",
-                            "&aPurchase Price: &e" + itemPrice,
+                            purchasable ? "&aPurchase Price: &e" + itemPrice : "&cNot purchasable",
                             sellable ? "&cSell Price: &e" + itemPrice * 0.5f : "&cNot sellable",
                             "",
-                            "&aLeft-Click &7to buy",
+                            purchasable ? "&aLeft-Click &7to buy" : "",
                             sellable ? "&cRight-Click &7to sell" : "",
                             ""
                     })
@@ -79,7 +81,7 @@ public abstract class Category {
             Button button = GooeyButton.builder()
                     .display(stack)
                     .onClick((ac) -> {
-                        if (ac.getClickType() != ButtonClick.LEFT_CLICK && ac.getClickType() != ButtonClick.RIGHT_CLICK) {
+                        if (ac.getClickType() != ButtonClick.LEFT_CLICK && ac.getClickType() != ButtonClick.RIGHT_CLICK || (!purchasable && !sellable)) {
                             return;
                         }
                         Shop.itemTransaction(() -> displayPage(pageId, ac.getPlayer()), ac.getPlayer(), item.asItem(), itemPrice, 1, ac.getClickType() == ButtonClick.LEFT_CLICK || !sellable);
@@ -87,11 +89,12 @@ public abstract class Category {
                     })
                     .build();
 
-            builder.set(i, button);
-            if (i + pageOffset >= items.size()-1) {
+            builder.set(slot, button);
+            if (slot + pageOffset >= items.size()-1) {
                 availableNextPage = false;
                 break;
             }
+            slot++;
         }
 
         if (pageId > 0) {

@@ -20,6 +20,7 @@ public class OresMinerals extends Category {
     @Override
     public ArrayList<ItemConvertible> getItems() {
         ArrayList<ItemConvertible> items = new ArrayList<>(List.of(
+                COAL_BLOCK,
                 IRON_BLOCK,
                 GOLD_BLOCK,
                 DIAMOND_BLOCK,
@@ -29,6 +30,7 @@ public class OresMinerals extends Category {
                 LAPIS_BLOCK,
                 AMETHYST_BLOCK,
                 BUDDING_AMETHYST,
+                COAL,
                 IRON_INGOT,
                 GOLD_INGOT,
                 DIAMOND,

@@ -155,6 +155,7 @@ public class Shop {
             GooeyButton add = GooeyButton.builder()
                     .display(new ItemBuilder(Items.GREEN_STAINED_GLASS_PANE)
                             .name("&aAdd " + amountOption)
+                            .count(amountOption)
                             .build()
                     )
                     .onClick((ac) -> {
@@ -173,6 +174,7 @@ public class Shop {
             GooeyButton remove = GooeyButton.builder()
                     .display(new ItemBuilder(Items.RED_STAINED_GLASS_PANE)
                             .name("&cRemove  " + amountOption)
+                            .count(amountOption)
                             .build()
                     )
                     .onClick((ac) -> {

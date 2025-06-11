@@ -29,6 +29,8 @@ public class CVoteCommand {
             ServerPlayerEntity target = EntityArgumentType.getPlayer(context, "target");
             String command = "padmin givekey %player% 1 Vote Crate".replaceAll("%player%", target.getGameProfile().getName());
             context.getSource().getServer().getCommandManager().executeWithPrefix(context.getSource(), command);
+            String broadcast = "/tellraw @a [\"\",{\"text\":\"[VOTE]\",\"bold\":true,\"color\":\"green\"},{\"text\":\" {username}\",\"bold\":true,\"color\":\"gold\"},{\"text\":\" has just voted!\"}]";
+            context.getSource().getServer().getCommandManager().executeWithPrefix(context.getSource(), broadcast.replaceAll("\\{username}", target.getGameProfile().getName()));
         } catch (Exception e) {
             e.printStackTrace();
         }
