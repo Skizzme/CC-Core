@@ -7,6 +7,7 @@ import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.impactdev.impactor.api.economy.events.EconomyTransactionEvent;
 import net.impactdev.impactor.api.events.ImpactorEventBus;
+import net.minecraft.server.world.ServerWorld;
 
 import java.awt.*;
 
@@ -18,6 +19,9 @@ public class CCCoreServer implements DedicatedServerModInitializer {
 			Shop.loadConfig();
 			ChunkGenerator.load(server);
 			ChunkGenerator.chunkLoader(server);
+			for (ServerWorld world : server.getWorlds()) {
+				System.out.println("TEST: " + world.getRegistryKey().getRegistry() + ", " + world.getRegistryKey().getValue());
+			}
 		});
 
 		ServerLifecycleEvents.SERVER_STOPPING.register(server -> {

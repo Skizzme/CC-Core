@@ -6,6 +6,7 @@ import ca.landonjw.gooeylibs2.api.button.ButtonClick;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
+import me.skizzme.cc.CCCore;
 import me.skizzme.cc.shop.Shop;
 import me.skizzme.cc.util.GuiUtils;
 import me.skizzme.cc.util.ItemBuilder;
@@ -40,12 +41,23 @@ public abstract class Category {
     public abstract ArrayList<ItemConvertible> getItems();
     public abstract boolean isSellable(ItemConvertible item);
 
+    public ArrayList<ItemConvertible> getPurchasableItems() {
+        ArrayList<ItemConvertible> items = new ArrayList<>();
+        for (ItemConvertible i : getItems()) {
+            float itemPrice = Shop.getItemPrice(i.asItem());
+            if (itemPrice != 0.0f) {
+                items.add(i);
+            }
+        }
+        return items;
+    }
+
     public void display(ServerPlayerEntity player) {
         displayPage(0, player);
     }
 
     private void displayPage(int pageId, ServerPlayerEntity player) {
-        Tuple<GooeyPage, Boolean> pageResult = createPage(pageId, this.getItems());
+        Tuple<GooeyPage, Boolean> pageResult = createPage(pageId, this.getPurchasableItems());
         GooeyPage page = pageResult.getFirst();
 
         UIManager.openUIForcefully(player, page);
@@ -61,7 +73,7 @@ public abstract class Category {
             ItemConvertible item = items.get(i + pageOffset);
             boolean sellable = isSellable(item);
             float itemPrice = Shop.getItemPrice(item);
-            boolean purchasable = itemPrice == 0.0f;
+            boolean purchasable = itemPrice != 0.0f;
             MutableText name = Text.empty();
             name.formatted(Formatting.GRAY);
             name.append(item.asItem().getName());
@@ -69,8 +81,8 @@ public abstract class Category {
                     .name(name)
                     .lore(new String[] {
                             "",
-                            purchasable ? "&aPurchase Price: &e" + itemPrice : "&cNot purchasable",
-                            sellable ? "&cSell Price: &e" + itemPrice * 0.5f : "&cNot sellable",
+                            purchasable ? "&aPurchase Price: &e" + CCCore.MONEY_FORMAT.format(itemPrice) : "&cNot purchasable",
+                            sellable ? "&cSell Price: &e" + CCCore.MONEY_FORMAT.format(itemPrice * 0.5f) : "&cNot sellable",
                             "",
                             purchasable ? "&aLeft-Click &7to buy" : "",
                             sellable ? "&cRight-Click &7to sell" : "",

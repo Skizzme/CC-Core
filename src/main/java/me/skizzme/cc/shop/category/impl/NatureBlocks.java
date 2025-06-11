@@ -18,7 +18,8 @@ public class NatureBlocks extends Category {
         ArrayList<ItemConvertible> items = new ArrayList<>();
         Registries.ITEM_GROUP.get(ItemGroups.NATURAL).getDisplayStacks().forEach((i) -> {
             if (i.getItem() == Items.BEDROCK || i.getName().getString().toLowerCase().contains("ore") ||
-                    i.getItem() == Items.SCULK_SHRIEKER || i.getItem() == Items.TURTLE_EGG || i.getItem() == Items.SNIFFER_EGG
+                    i.getItem() == Items.SCULK_SHRIEKER || i.getItem() == Items.TURTLE_EGG || i.getItem() == Items.SNIFFER_EGG ||
+                    i.getItem() == Items.BEE_NEST || i.getItem() == Items.HONEYCOMB_BLOCK
             )
                 return;
             items.add(i.getItem());

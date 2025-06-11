@@ -22,7 +22,7 @@ public class FoodCrops extends Category {
 
         for (ItemStack i : Registries.ITEM_GROUP.get(ItemGroups.FOOD_AND_DRINK).getDisplayStacks()) {
             if (i.getItem() == Items.ROTTEN_FLESH || i.getItem() == Items.GOLDEN_APPLE || i.getItem() == Items.ENCHANTED_GOLDEN_APPLE) {
-                break;
+                continue;
             }
             items.add(i.getItem());
         }

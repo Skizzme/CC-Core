@@ -36,6 +36,7 @@ import net.minecraft.util.Formatting;
 import java.awt.*;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 public class Shop {
 
@@ -66,9 +67,10 @@ public class Shop {
             CCCore.LOGGER.info("Shop prices not found, initializing default prices");
             prices = new JsonObject();
             for (Category c : categories) {
-                if (c.getItems() == null) continue;
+                ArrayList<ItemConvertible> items = c.getItems();
+                if (items == null) continue;
 
-                for (ItemConvertible i : c.getItems()) {
+                for (ItemConvertible i : items) {
                     prices.addProperty(i.asItem().getTranslationKey(), 1.0);
                 }
             }
