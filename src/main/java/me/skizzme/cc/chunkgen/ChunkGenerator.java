@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.skizzme.cc.CCCore;
+import me.skizzme.cc.stats.Statistics;
 import me.skizzme.cc.util.ConfigUtils;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
@@ -14,6 +15,7 @@ import net.minecraft.world.chunk.ChunkStatus;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ChunkGenerator {
 
@@ -88,37 +90,38 @@ public class ChunkGenerator {
             Thread t = new Thread(() -> {
                 int[][] dirs = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
                 while (server.isRunning()) {
-                    int chunkX = state.radius, chunkZ = state.radius;
-                    for (int[] dir : dirs) {
-                        for (int i = 0; i < state.radius * 2; i++) {
+                    int[] dir = dirs[state.dir];
+                    for (int i = 0; i < state.radius * 2; i++) {
 
-                            int finalChunkX = chunkX;
-                            int finalChunkZ = chunkZ;
-                            long sleepTime = (long) (Math.pow(server.getCurrentPlayerCount() * playerMult(), playerExponential()) * sleepMult() + baseSleep());
+                        long sleepTime = (long) (Math.pow(server.getCurrentPlayerCount() * playerMult(), playerExponential()) * sleepMult() + baseSleep());
 
-//							server.execute(() -> {
-                            w.getChunk(finalChunkX, finalChunkZ, ChunkStatus.FULL, true);
-//                            System.out.println("Get chunk at " + finalChunkX + ", " + finalChunkZ + " (" + sleepTime + ")");
-                            TOTAL_PRE_GEN++;
-//							});
+                        w.getChunk(state.chunkX, state.chunkZ, ChunkStatus.FULL, true);
+                        Statistics.updateStat("totalChunkPreGen", 1.0);
 
-                            try {
-                                Thread.sleep(sleepTime);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            chunkX += dir[0];
-                            chunkZ += dir[1];
-                            if (!server.isRunning()) break;
+                        try {
+                            Thread.sleep(sleepTime);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                        if (!server.isRunning()) break;
+
+                        state.chunkX += dir[0];
+                        state.chunkZ += dir[1];
+                        state.markDirty();
+                        if (!server.isRunning() || !state.enabled) break;
                     }
-                    if (state.radius > borderSizeChunks + 16) {
-                        break;
+
+                    state.dir++;
+                    if (state.dir >= dirs.length) {
+                        if (state.radius > borderSizeChunks + 16) {
+                            break;
+                        }
+                        state.radius++;
+                        state.chunkX = state.radius;
+                        state.chunkZ = state.radius;
+                        state.dir = 0;
                     }
-                    state.radius++;
-                    state.markDirty();
+
+                    if (!server.isRunning() || !state.enabled) break;
                 }
             });
             t.setName("chunk-generator-" + w.getRegistryKey().getValue().toString());
@@ -127,28 +130,38 @@ public class ChunkGenerator {
     }
 
     public static class ChunkGenState extends PersistentState {
-        public int radius = 1;
+        public int radius = 1, chunkX = 1, chunkZ = 1;
+        public int dir = 0;
+        public boolean enabled = true;
 
         public static PersistentState.Type<ChunkGenState> persistentType() {
             return new Type<>(ChunkGenState::createNew, ChunkGenState::createFromNbt, null);
         }
 
         public static ChunkGenState createNew() {
-            System.out.println("created nbt radius");
             return new ChunkGenState();
         }
 
         public static ChunkGenState createFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
             ChunkGenState s = new ChunkGenState();
+
             s.radius = tag.getInt("radius");
-            System.out.println("loaded nbt radius " + s.radius);
+            s.chunkX = tag.getInt("chunkX");
+            s.chunkZ = tag.getInt("chunkZ");
+            s.dir = tag.getInt("dir");
+            s.enabled = tag.getBoolean("enabled");
+
             return s;
         }
 
         @Override
         public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-            System.out.println("saved nbt radius " + this.radius);
             nbt.putInt("radius", this.radius);
+            nbt.putInt("chunkX", this.chunkX);
+            nbt.putInt("chunkZ", this.chunkZ);
+            nbt.putInt("dir", this.dir);
+            nbt.putBoolean("enabled", this.enabled);
+
             return nbt;
         }
     }

@@ -34,12 +34,8 @@ public class CCCore implements ModInitializer {
 	public void onInitialize() {
 		CommandRegistrationCallback.EVENT.register(this::registerCommands);
 		ServerChunkEvents.CHUNK_GENERATE.register((world, chunk) -> {
-			System.out.println("[ChunkGen] " + chunk.getPos());
-			TOTAL_CHUNK_GEN++;
+			Statistics.updateStat("totalChunkGen", 1.0);
 		});
-
-		Statistics.register("totalChunkGen", () -> (double) TOTAL_CHUNK_GEN);
-		Statistics.register("totalChunkPreGen", () -> (double) ChunkGenerator.TOTAL_PRE_GEN);
 	}
 
 	public void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registry, CommandManager.RegistrationEnvironment env) {
