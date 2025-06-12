@@ -36,8 +36,8 @@ public class OresMinerals extends Category {
                 NETHERITE_INGOT,
                 REDSTONE,
                 LAPIS_LAZULI,
-                SMALL_AMETHYST_BUD,
-                MEDIUM_AMETHYST_BUD,
+                AMETHYST_CLUSTER,
+                AMETHYST_SHARD,
                 COAL_BLOCK,
                 COAL
         ));

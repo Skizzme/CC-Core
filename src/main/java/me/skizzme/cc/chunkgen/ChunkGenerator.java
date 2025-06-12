@@ -102,15 +102,10 @@ public class ChunkGenerator {
                     int[] dir = dirs[state.dir];
                     for (int i = 0; i < state.radius * 2; i++) {
 
-//                            w.getChunk(state.chunkX, state.chunkZ, ChunkStatus.FULL, true);
-//                            w.getChunk();tr
                         try {
-//                            long st = System.nanoTime();
                             CompletableFuture<OptionalChunk<Chunk>> f = w.getChunkManager().getChunkFutureSyncOnMainThread(state.chunkX, state.chunkZ, ChunkStatus.FULL, true);
                             Statistics.updateStat("totalChunkPreGen", 1.0);
                             f.get();
-//                            long et = System.nanoTime();
-//                            System.out.println("gen " + (et-st) / 1e6f);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
