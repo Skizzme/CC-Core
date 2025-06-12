@@ -64,6 +64,7 @@ public abstract class Category {
     }
 
     private Tuple<GooeyPage, Boolean> createPage(final int pageId, final ArrayList<ItemConvertible> items) {
+        System.out.println("create page w/ " + items.size() + ", " + this.getName() + ", " + pageId);
         ChestTemplate.Builder builder = ChestTemplate.builder(5);
 
         int pageOffset = 9 * 4 * pageId;
@@ -93,7 +94,11 @@ public abstract class Category {
             Button button = GooeyButton.builder()
                     .display(stack)
                     .onClick((ac) -> {
+                        System.out.println(ac.getClickType() + ", " + ac.getSlot());
                         if (ac.getClickType() != ButtonClick.LEFT_CLICK && ac.getClickType() != ButtonClick.RIGHT_CLICK || (!purchasable && !sellable)) {
+                            return;
+                        }
+                        if (ac.getClickType() == ButtonClick.LEFT_CLICK && !purchasable || ac.getClickType() == ButtonClick.RIGHT_CLICK && !sellable) {
                             return;
                         }
                         Shop.itemTransaction(() -> displayPage(pageId, ac.getPlayer()), ac.getPlayer(), item.asItem(), itemPrice, 1, ac.getClickType() == ButtonClick.LEFT_CLICK || !sellable);

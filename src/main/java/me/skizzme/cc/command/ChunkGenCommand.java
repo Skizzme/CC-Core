@@ -25,7 +25,7 @@ public class ChunkGenCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(
                 CommandManager.literal("chunkgen")
-                        .requires(Permissions.require(CCCore.PERM_ID + ".chunkgen"))
+                        .requires(Permissions.require(CCCore.PERM_ID + ".chunkgen").or(s -> s.hasPermissionLevel(4)))
                         .executes(ChunkGenCommand::run)
                         .then(CommandManager.argument("action", StringArgumentType.word())
                                 .suggests(CommandUtils.suggestions(new String[]{"reload", "reset", "stop", "start"})::build)
@@ -37,6 +37,7 @@ public class ChunkGenCommand {
     private static int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         context.getSource().sendMessage(
                 TextUtils.formatted(
+                        "&7Current Chunk Pause Time: &a" + ChunkGenerator.sleepTime(context.getSource().getServer()) + "ms\n" +
                         "&aStats over last minute:\n" +
                         "  &7Total Generated: &a" + Statistics.getStat("totalChunkGen").longValue() + "\n" +
                         "  &7Total Pre-Generated: &a" + Statistics.getStat("totalChunkPreGen").longValue()

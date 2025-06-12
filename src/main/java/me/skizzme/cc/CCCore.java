@@ -3,11 +3,7 @@ package me.skizzme.cc;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.CommandDispatcher;
-import me.skizzme.cc.chunkgen.ChunkGenerator;
-import me.skizzme.cc.command.CVoteCommand;
-import me.skizzme.cc.command.ChunkGenCommand;
-import me.skizzme.cc.command.MoneyCommand;
-import me.skizzme.cc.command.ShopCommand;
+import me.skizzme.cc.command.*;
 import me.skizzme.cc.stats.Statistics;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -15,7 +11,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.world.ServerWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +39,9 @@ public class CCCore implements ModInitializer {
 		CVoteCommand.register(dispatcher);
 		MoneyCommand.register(dispatcher);
 		ChunkGenCommand.register(dispatcher);
+		SudoCommand.register(dispatcher);
+		ActCommand.register(dispatcher);
+//		VoteCommand.register(dispatcher);
 		LOGGER.info("Registered commands");
 	}
 }

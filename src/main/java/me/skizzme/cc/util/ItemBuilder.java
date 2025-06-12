@@ -1,9 +1,12 @@
 package me.skizzme.cc.util;
 
+import me.skizzme.cc.ItemStackExt;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Unit;
 
@@ -21,6 +24,7 @@ public class ItemBuilder {
 
     public ItemBuilder(ItemConvertible item) {
         this.stack = new ItemStack(item);
+        this.setUntakeable();
         this.hideTooltip();
     }
 
@@ -40,6 +44,16 @@ public class ItemBuilder {
             lines.add(TextUtils.formatted(s));
         }
         this.stack.set(DataComponentTypes.LORE, new LoreComponent(lines));
+        return this;
+    }
+
+    public ItemBuilder setCustomData(NbtComponent comp) {
+        this.stack.set(DataComponentTypes.CUSTOM_DATA, comp);
+        return this;
+    }
+
+    public ItemBuilder setUntakeable() {
+        ((ItemStackExt) (Object) this.stack).setUntakeable(true);
         return this;
     }
 
@@ -66,5 +80,7 @@ public class ItemBuilder {
     public ItemStack build() {
         return this.stack;
     }
+
+//    public static boolean isItemUntakeable()
 
 }

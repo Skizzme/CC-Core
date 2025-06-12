@@ -9,13 +9,15 @@ import me.skizzme.cc.util.ConfigUtils;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.OptionalChunk;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
 
 public class ChunkGenerator {
 
@@ -70,7 +72,12 @@ public class ChunkGenerator {
         return worlds;
     }
 
+    public static long sleepTime(MinecraftServer server) {
+        return (long) (Math.pow(server.getCurrentPlayerCount() * playerMult(), playerExponential()) * sleepMult() + baseSleep());
+    }
+
     public static void chunkLoader(MinecraftServer server) {
+        CCCore.LOGGER.info("Starting Chunk Generator...");
         server.getWorlds().forEach(w -> {
             double borderSizeChunks = w.getWorldBorder().getSize() / 16;
 
@@ -87,19 +94,29 @@ public class ChunkGenerator {
             ChunkGenState state = w.getPersistentStateManager().getOrCreate(ChunkGenState.persistentType(), CCCore.MOD_ID);
             state.markDirty();
 
+            System.out.println("loaded state " + state);
+
             Thread t = new Thread(() -> {
                 int[][] dirs = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
                 while (server.isRunning()) {
                     int[] dir = dirs[state.dir];
                     for (int i = 0; i < state.radius * 2; i++) {
 
-                        long sleepTime = (long) (Math.pow(server.getCurrentPlayerCount() * playerMult(), playerExponential()) * sleepMult() + baseSleep());
-
-                        w.getChunk(state.chunkX, state.chunkZ, ChunkStatus.FULL, true);
-                        Statistics.updateStat("totalChunkPreGen", 1.0);
+//                            w.getChunk(state.chunkX, state.chunkZ, ChunkStatus.FULL, true);
+//                            w.getChunk();tr
+                        try {
+//                            long st = System.nanoTime();
+                            CompletableFuture<OptionalChunk<Chunk>> f = w.getChunkManager().getChunkFutureSyncOnMainThread(state.chunkX, state.chunkZ, ChunkStatus.FULL, true);
+                            Statistics.updateStat("totalChunkPreGen", 1.0);
+                            f.get();
+//                            long et = System.nanoTime();
+//                            System.out.println("gen " + (et-st) / 1e6f);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
                         try {
-                            Thread.sleep(sleepTime);
+                            Thread.sleep(sleepTime(server));
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -163,6 +180,17 @@ public class ChunkGenerator {
             nbt.putBoolean("enabled", this.enabled);
 
             return nbt;
+        }
+
+        @Override
+        public String toString() {
+            return "ChunkGenState{" +
+                    "radius=" + radius +
+                    ", chunkX=" + chunkX +
+                    ", chunkZ=" + chunkZ +
+                    ", dir=" + dir +
+                    ", enabled=" + enabled +
+                    '}';
         }
     }
 }

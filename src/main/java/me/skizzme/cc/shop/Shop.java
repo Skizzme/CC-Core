@@ -5,6 +5,7 @@ import ca.landonjw.gooeylibs2.api.button.ButtonClick;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
+import ca.landonjw.gooeylibs2.api.template.types.InventoryTemplate;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.skizzme.cc.CCCore;
@@ -208,8 +209,15 @@ public class Shop {
                 .build()
         );
         builder.set(1, 4, GooeyButton.builder()
-                .display(new ItemBuilder(Items.BOOK)
+                .display(new ItemBuilder(item)
                         .name("&aConfirm")
+                        .lore(new String[] {
+                                "",
+                                "&7Amount: " + (buy ? "&9" : "&c") + CCCore.INT_FORMAT.format(amount),
+                                "&7Total Price: &a" + CCCore.MONEY_FORMAT.format(amount * itemPrice),
+                                "&7Item Price: &e" + CCCore.MONEY_FORMAT.format(itemPrice),
+                                ""
+                        })
                         .build()
                 )
                 .onClick((ac) ->
@@ -261,12 +269,17 @@ public class Shop {
         builder.fill(GuiUtils.background());
         GooeyPage page = GooeyPage.builder()
                 .template(builder.build())
+//                .title(Text.empty()
+//                        .append(buy ? TextUtils.formatted("&9+" + CCCore.INT_FORMAT.format(amount) + " &8") : TextUtils.formatted("&c-" + CCCore.INT_FORMAT.format(amount) + " &8"))
+//                        .append(item.getName())
+//                        .append(TextUtils.formatted(" - &a" + CCCore.MONEY_FORMAT.format(itemPrice * amount)))
+//                )
                 .title(Text.empty()
-                        .append(buy ? TextUtils.formatted("&9+" + CCCore.INT_FORMAT.format(amount) + " &8") : TextUtils.formatted("&c-" + CCCore.INT_FORMAT.format(amount) + " &8"))
-                        .append(item.getName())
-                        .append(TextUtils.formatted(" - &a" + CCCore.MONEY_FORMAT.format(itemPrice * amount)))
+                        .append((buy ? TextUtils.formatted("&9+" + CCCore.INT_FORMAT.format(amount)) : TextUtils.formatted("&c-" + CCCore.INT_FORMAT.format(amount))))
+                        .append(TextUtils.formatted(" &8- &a" + CCCore.MONEY_FORMAT.format(itemPrice * amount)))
                 )
                 .build();
+
         UIManager.openUIForcefully(player, page);
     }
 }
