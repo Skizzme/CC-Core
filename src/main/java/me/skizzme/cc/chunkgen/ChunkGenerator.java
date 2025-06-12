@@ -10,10 +10,12 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.OptionalChunk;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
+import net.minecraft.world.chunk.WorldChunk;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -103,9 +105,15 @@ public class ChunkGenerator {
                     for (int i = 0; i < state.radius * 2; i++) {
 
                         try {
-                            CompletableFuture<OptionalChunk<Chunk>> f = w.getChunkManager().getChunkFutureSyncOnMainThread(state.chunkX, state.chunkZ, ChunkStatus.FULL, true);
+                            long st = System.nanoTime();
+//                            CompletableFuture<OptionalChunk<Chunk>> f = w.getChunkManager().getChunkFutureSyncOnMainThread(state.chunkX, state.chunkZ, ChunkStatus.FULL, true);
+                            WorldChunk chunk = w.getChunkManager().getWorldChunk(state.chunkX, state.chunkZ, true);
                             Statistics.updateStat("totalChunkPreGen", 1.0);
-                            f.get();
+//                            f.get().ifPresent(c -> {
+//                                System.out.println(c.getPos());
+//                            });
+                            long et = System.nanoTime();
+//                            System.out.println((et-st) / 1e6f);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

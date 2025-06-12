@@ -53,7 +53,7 @@ public class ItemBuilder {
     }
 
     public ItemBuilder setUntakeable() {
-        ((ItemStackExt) (Object) this.stack).setUntakeable(true);
+//        ((ItemStackExt) (Object) this.stack).setUntakeable(true);
         return this;
     }
 

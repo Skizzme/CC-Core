@@ -61,6 +61,7 @@ public class ChunkGenCommand {
         } else if (action.equals("reset")) {
             for (ServerWorld w : context.getSource().getServer().getWorlds()) {
                 ChunkGenerator.ChunkGenState state = w.getPersistentStateManager().get(ChunkGenerator.ChunkGenState.persistentType(), CCCore.MOD_ID);
+                if (state == null) continue;
                 state.dir = 0;
                 state.chunkZ = 1;
                 state.chunkX = 1;
@@ -70,12 +71,14 @@ public class ChunkGenCommand {
         } else if (action.equals("stop")) {
             for (ServerWorld w : context.getSource().getServer().getWorlds()) {
                 ChunkGenerator.ChunkGenState state = w.getPersistentStateManager().get(ChunkGenerator.ChunkGenState.persistentType(), CCCore.MOD_ID);
+                if (state == null) continue;
                 state.enabled = false;
                 state.markDirty();
             }
         } else if (action.equals("start")) {
             for (ServerWorld w : context.getSource().getServer().getWorlds()) {
                 ChunkGenerator.ChunkGenState state = w.getPersistentStateManager().get(ChunkGenerator.ChunkGenState.persistentType(), CCCore.MOD_ID);
+                if (state == null) continue;
                 state.enabled = true;
                 state.markDirty();
             }

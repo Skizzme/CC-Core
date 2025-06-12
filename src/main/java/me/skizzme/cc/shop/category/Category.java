@@ -6,15 +6,18 @@ import ca.landonjw.gooeylibs2.api.button.ButtonClick;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
+import com.mojang.serialization.Lifecycle;
 import me.skizzme.cc.CCCore;
 import me.skizzme.cc.shop.Shop;
 import me.skizzme.cc.util.GuiUtils;
 import me.skizzme.cc.util.ItemBuilder;
 import me.skizzme.cc.util.TextUtils;
 import net.impactdev.impactor.api.utility.collections.mappings.Tuple;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -24,10 +27,13 @@ import net.minecraft.util.Formatting;
 
 import java.util.ArrayList;
 
+import static net.minecraft.item.ItemGroups.COLORED_BLOCKS;
+
 public abstract class Category {
 
     private Text name;
     private ItemConvertible display;
+    private static Registry<ItemGroup> reg;
 
     public Category(Text name, ItemConvertible display) {
         this.name = name;
@@ -36,6 +42,17 @@ public abstract class Category {
     public Category(String name, ItemConvertible display) {
         this.name = TextUtils.formatted(name);
         this.display = display;
+    }
+
+    public static Registry<ItemGroup> getGroups() {
+        if (reg == null) { // Registries.ITEM_GROUP.get(ItemGroups.COLORED_BLOCKS).getDisplayStacks().size() == 0
+            reg = new SimpleRegistry<>(RegistryKeys.ITEM_GROUP, Lifecycle.stable(), false);
+//            ItemGroups.registerAndGetDefault(Registries.ITEM_GROUP);
+            ItemGroups.registerAndGetDefault(reg);
+            System.out.println("registered" + ", " + reg.getEntrySet());
+            System.out.println(reg.get(COLORED_BLOCKS).getIcon() + ", " + reg.get(COLORED_BLOCKS).getDisplayStacks());
+        }
+        return reg;
     }
 
     public abstract ArrayList<ItemConvertible> getItems();
@@ -64,13 +81,14 @@ public abstract class Category {
     }
 
     private Tuple<GooeyPage, Boolean> createPage(final int pageId, final ArrayList<ItemConvertible> items) {
-        System.out.println("create page w/ " + items.size() + ", " + this.getName() + ", " + pageId);
+//        System.out.println("create page w/ " + items.size() + ", " + this.getName() + ", " + pageId);
         ChestTemplate.Builder builder = ChestTemplate.builder(5);
 
         int pageOffset = 9 * 4 * pageId;
         int slot = 0;
         boolean availableNextPage = true;
         for (int i = 0; i < 9 * 4; i++) {
+//            System.out.println(items.size() + ", " + pageId + ", " + pageOffset);
             ItemConvertible item = items.get(i + pageOffset);
             boolean sellable = isSellable(item);
             float itemPrice = Shop.getItemPrice(item);

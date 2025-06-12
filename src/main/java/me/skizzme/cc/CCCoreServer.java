@@ -9,15 +9,19 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.impactdev.impactor.api.economy.events.EconomyTransactionEvent;
 import net.impactdev.impactor.api.events.ImpactorEventBus;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
 import java.awt.*;
 
 public class CCCoreServer implements DedicatedServerModInitializer {
 
+	private static MinecraftServer server;
+
 	@Override
 	public void onInitializeServer() {
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+			CCCoreServer.server = server;
 			Shop.loadConfig();
 			ChunkGenerator.load(server);
 			ChunkGenerator.chunkLoader(server);
@@ -32,5 +36,9 @@ public class CCCoreServer implements DedicatedServerModInitializer {
 		});
 
 		ImpactorEventBus.bus().subscribe(EconomyTransactionEvent.Pre.class, new TransactionListener());
+	}
+
+	public static MinecraftServer getServer() {
+		return server;
 	}
 }
