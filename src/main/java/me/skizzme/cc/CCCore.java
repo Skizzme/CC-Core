@@ -30,13 +30,13 @@ public class CCCore implements ModInitializer {
 	public static final NumberFormat MONEY_FORMAT = NumberFormat.getCurrencyInstance();
 	public static final NumberFormat INT_FORMAT = NumberFormat.getIntegerInstance();
 	public static final Text PREFIX = Text.empty()
-			.append(TextUtils.formatted("&7["))
+			.append(TextUtils.formatted("&8["))
 			.append(TextUtils.gradientTextRGB(
 					new Color(45, 73, 156),
 					Color.white,
 					"Cobblemon Cove"
 			))
-			.append(TextUtils.formatted("&7] "));
+			.append(TextUtils.formatted("&8] "));
 
 	@Override
 	public void onInitialize() {
@@ -55,7 +55,8 @@ public class CCCore implements ModInitializer {
 		SudoCommand.register(dispatcher);
 		ActCommand.register(dispatcher);
 		DiscordCommand.register(dispatcher);
-//		VoteCommand.register(dispatcher);
+		AdvertiserCommand.register(dispatcher);
+
 		LOGGER.info("Registered commands");
 	}
 
