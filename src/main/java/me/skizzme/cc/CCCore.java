@@ -57,6 +57,8 @@ public class CCCore implements ModInitializer {
 		DiscordCommand.register(dispatcher);
 		AdvertiserCommand.register(dispatcher);
 		ApplyCommand.register(dispatcher);
+		BroadcastCommand.register(dispatcher);
+		MessageCommand.register(dispatcher);
 
 		LOGGER.info("Registered commands");
 	}

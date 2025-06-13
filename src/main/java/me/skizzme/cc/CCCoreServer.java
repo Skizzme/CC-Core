@@ -24,7 +24,7 @@ public class CCCoreServer implements DedicatedServerModInitializer {
 			CCCoreServer.server = server;
 			Shop.loadConfig();
 			ChunkGenerator.load(server);
-			ChunkGenerator.chunkLoader(server);
+//			ChunkGenerator.chunkLoader(server);
 			for (ServerWorld world : server.getWorlds()) {
 				System.out.println("TEST: " + world.getRegistryKey().getRegistry() + ", " + world.getRegistryKey().getValue());
 			}
