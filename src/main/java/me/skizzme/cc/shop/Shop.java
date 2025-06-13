@@ -38,6 +38,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Shop {
 
@@ -64,6 +65,9 @@ public class Shop {
         try {
             prices = ConfigUtils.readFileThrowing(PRICE_CONFIG_PATH);
             CCCore.LOGGER.info("Loaded " + prices.size() + " shop prices");
+            if (updateConfig()) {
+                CCCore.LOGGER.info("Updated shop prices to new version");
+            }
         } catch (IOException e) {
             CCCore.LOGGER.info("Shop prices not found, initializing default prices");
             prices = new JsonObject();
@@ -72,7 +76,7 @@ public class Shop {
                 if (items == null) continue;
 
                 for (ItemConvertible i : items) {
-                    prices.addProperty(i.asItem().getTranslationKey(), 1.0);
+                    addItemToObject(prices, i.asItem().getTranslationKey(), 1.0f);
                 }
             }
             ConfigUtils.writeFile(PRICE_CONFIG_PATH, prices);
@@ -80,10 +84,36 @@ public class Shop {
         }
     }
 
+    private static boolean updateConfig() {
+        JsonObject updatedPrices = new JsonObject();
+        boolean shouldUpdate = false;
+        for (Map.Entry<String, JsonElement> e : prices.entrySet()) {
+            String key = e.getKey();
+            JsonElement value = e.getValue();
+            if (!value.isJsonObject()) {
+                shouldUpdate = true;
+                addItemToObject(updatedPrices, key, value.getAsFloat());
+            }
+        }
+        if (shouldUpdate) {
+            prices = updatedPrices;
+            ConfigUtils.writeFile(PRICE_CONFIG_PATH, prices);
+        }
+        return shouldUpdate;
+    }
+
+    private static void addItemToObject(JsonObject obj, String key, float price) {
+        JsonObject itemObject = new JsonObject();
+        itemObject.addProperty("prices", price);
+        itemObject.addProperty("sell_percent", 0.1);
+        obj.add(key, itemObject);
+    }
+
     public static float getItemPrice(ItemConvertible item) {
         JsonElement result = prices.get(item.asItem().getTranslationKey());
         if (result == null || result.isJsonNull()) {
-            prices.addProperty(item.asItem().getTranslationKey(), 1.0);
+//            prices.addProperty(item.asItem().getTranslationKey(), 1.0);
+            addItemToObject(prices, item.asItem().getTranslationKey(), 1.0f);
             ConfigUtils.writeFile(PRICE_CONFIG_PATH, prices);
             return getItemPrice(item);
         }
