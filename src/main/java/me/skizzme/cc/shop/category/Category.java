@@ -1,3 +1,6 @@
+
+
+
 package me.skizzme.cc.shop.category;
 
 import ca.landonjw.gooeylibs2.api.UIManager;
@@ -14,7 +17,6 @@ import me.skizzme.cc.util.ItemBuilder;
 import me.skizzme.cc.util.TextUtils;
 import net.impactdev.impactor.api.utility.collections.mappings.Tuple;
 import net.minecraft.item.*;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.SimpleRegistry;
@@ -61,8 +63,8 @@ public abstract class Category {
     public ArrayList<ItemConvertible> getPurchasableItems() {
         ArrayList<ItemConvertible> items = new ArrayList<>();
         for (ItemConvertible i : getItems()) {
-            float itemPrice = Shop.getItemPrice(i.asItem());
-            if (itemPrice != 0.0f) {
+            Shop.ItemInfo itemInfo = Shop.getItemInfo(i.asItem());
+            if (itemInfo.getPrice() != 0.0f) {
                 items.add(i);
             }
         }
@@ -91,8 +93,8 @@ public abstract class Category {
 //            System.out.println(items.size() + ", " + pageId + ", " + pageOffset);
             ItemConvertible item = items.get(i + pageOffset);
             boolean sellable = isSellable(item);
-            float itemPrice = Shop.getItemPrice(item);
-            boolean purchasable = itemPrice != 0.0f;
+            Shop.ItemInfo itemInfo = Shop.getItemInfo(item);
+            boolean purchasable = itemInfo.getPrice() != 0.0f;
             MutableText name = Text.empty();
             name.formatted(Formatting.GRAY);
             name.append(item.asItem().getName());
@@ -100,8 +102,8 @@ public abstract class Category {
                     .name(name)
                     .lore(new String[] {
                             "",
-                            purchasable ? "&aPurchase Price: &e" + CCCore.MONEY_FORMAT.format(itemPrice) : "&cNot purchasable",
-                            sellable ? "&cSell Price: &e" + CCCore.MONEY_FORMAT.format(itemPrice * 0.5f) : "&cNot sellable",
+                            purchasable ? "&aPurchase Price: &e" + CCCore.MONEY_FORMAT.format(itemInfo.getPrice()) : "&cNot purchasable",
+                            sellable ? "&cSell Price: &e" + CCCore.MONEY_FORMAT.format(itemInfo.getPrice() * itemInfo.getSellPercent()) : "&cNot sellable",
                             "",
                             purchasable ? "&aLeft-Click &7to buy" : "",
                             sellable ? "&cRight-Click &7to sell" : "",
@@ -119,7 +121,7 @@ public abstract class Category {
                         if (ac.getClickType() == ButtonClick.LEFT_CLICK && !purchasable || ac.getClickType() == ButtonClick.RIGHT_CLICK && !sellable) {
                             return;
                         }
-                        Shop.itemTransaction(() -> displayPage(pageId, ac.getPlayer()), ac.getPlayer(), item.asItem(), itemPrice, 1, ac.getClickType() == ButtonClick.LEFT_CLICK || !sellable);
+                        Shop.itemTransaction(() -> displayPage(pageId, ac.getPlayer()), ac.getPlayer(), item.asItem(), itemInfo, 1, ac.getClickType() == ButtonClick.LEFT_CLICK || !sellable);
                         ac.getPlayer().playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.AMBIENT, 0.7f, 1.0f);
                     })
                     .build();
