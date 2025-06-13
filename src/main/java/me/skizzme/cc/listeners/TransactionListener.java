@@ -22,7 +22,7 @@ public class TransactionListener implements EventSubscriber<EconomyTransactionEv
         if (event.amount().equals(BigDecimal.ZERO)) {
             return;
         }
-        String log = "Amount: " + event.amount() + ", Type: " + event.type().name() + ", User ID: " + event.account().owner() + ", Balance: " + event.account().balance();
+        String log = "Amount: " + event.amount() + ", Type: " + event.type().name() + ", User ID: " + event.account().owner()  + ", Balance: " + event.account().balance();
         FileUtils.appendFile("economy_log.txt", "[" + TimeUtils.getTimeDefault() + "] " + log + "\n");
     }
 

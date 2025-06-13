@@ -11,6 +11,7 @@ import me.skizzme.cc.shop.Shop;
 import me.skizzme.cc.util.TextUtils;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.world.chunk.ChunkLoader;
 
@@ -23,11 +24,12 @@ public class ShopCommand {
                         .executes(ShopCommand::run)
                         .then(CommandManager
                                 .argument("action", StringArgumentType.word())
-                                .requires(Permissions.require(CCCore.PERM_ID + ".shop.reload"))
                                 .suggests((ctx, builder) -> {
-                                    String[] suggestions = {"reload"};
+                                    String[] suggestions = {"reload", "log"};
                                     for (String s : suggestions) {
-                                        builder.suggest(s);
+                                        if (Permissions.check(ctx.getSource(), CCCore.PERM_ID + ".shop." + s)) {
+                                            builder.suggest(s);
+                                        }
                                     }
                                     return builder.buildFuture();
                                 })
@@ -44,12 +46,20 @@ public class ShopCommand {
     private static int runArg1(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 
         String sub = StringArgumentType.getString(context, "action").toLowerCase();
+        ServerPlayerEntity player = context.getSource().getPlayer();
         if (sub.equals("reload")) {
             context.getSource().sendMessage(TextUtils.formatted("&7Reloading..."));
             long st = System.nanoTime();
             Shop.loadConfig();
             long et = System.nanoTime();
             context.getSource().sendMessage(TextUtils.formatted("&aSuccessfully reloaded the shop config in " + Math.round((float) (et-st) / 1e6f * 100) / 100f + "ms"));
+        }
+        else if (sub.equals("log")) {
+            if (Shop.TRANSACTION_NOTIFS.contains(player)) {
+                Shop.TRANSACTION_NOTIFS.remove(player);
+            } else {
+                Shop.TRANSACTION_NOTIFS.add(player);
+            }
         }
         return 1;
     }

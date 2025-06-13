@@ -45,7 +45,7 @@ public class Advertiser {
                     Text.literal("/discord")
                             .setStyle(
                                     Style.EMPTY
-                                            .withColor(Formatting.DARK_PURPLE)
+                                            .withColor(Formatting.BLUE)
                                             .withBold(true)
                                             .withUnderline(true)
                                             .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/discord"))
@@ -58,7 +58,7 @@ public class Advertiser {
                     Text.literal("/apply")
                             .setStyle(
                                     Style.EMPTY
-                                            .withColor(Formatting.BLUE)
+                                            .withColor(Formatting.GREEN)
                                             .withBold(true)
                                             .withUnderline(true)
                                             .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/apply"))
