@@ -45,7 +45,7 @@ public class Advertiser {
                     Text.literal("/discord")
                             .setStyle(
                                     Style.EMPTY
-                                            .withColor(Formatting.BLUE)
+                                            .withColor(Formatting.DARK_PURPLE)
                                             .withBold(true)
                                             .withUnderline(true)
                                             .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/discord"))
@@ -53,22 +53,23 @@ public class Advertiser {
             ),
 
             Text.empty()
-                    .append(TextUtils.formatted("&7We're currently hiring staff. Join the discord to apply! "))
+                    .append(TextUtils.formatted("&7We're currently hiring staff. Type "))
                     .append(
-                    Text.literal("/discord")
+                    Text.literal("/apply")
                             .setStyle(
                                     Style.EMPTY
                                             .withColor(Formatting.BLUE)
                                             .withBold(true)
                                             .withUnderline(true)
-                                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/discord"))
+                                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/apply"))
                             )
+                            .append(TextUtils.formatted(" &7to apply"))
             ),
 
     };
 
     private static int index = 0;
-    private static long intervalSeconds = 300;
+    private static long intervalSeconds = 900;
     private static long lastAd = System.currentTimeMillis();
     public static boolean enabled = true;
 
