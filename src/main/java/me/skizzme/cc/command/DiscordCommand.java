@@ -35,7 +35,7 @@ public class DiscordCommand {
             player.sendMessage(Text.empty()
                     .append(Text.literal("  ").setStyle(Style.EMPTY))
                     .append(Text.empty()
-                            .append(TextUtils.formatted("Discord Link "))
+                            .append(TextUtils.formatted("Discord Link"))
                             .setStyle(Style.EMPTY
                                     .withColor(Formatting.DARK_PURPLE)
                                     .withUnderline(true)
