@@ -63,7 +63,7 @@ public class Advertiser {
                                             .withUnderline(true)
                                             .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/apply"))
                             )
-                            .append(TextUtils.formatted(" &7to apply"))
+                            .append(TextUtils.formatted("&7 to apply"))
             ),
 
     };
