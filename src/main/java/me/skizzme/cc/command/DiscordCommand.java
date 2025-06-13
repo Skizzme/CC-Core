@@ -35,9 +35,9 @@ public class DiscordCommand {
             player.sendMessage(Text.empty()
                     .append(Text.literal("  ").setStyle(Style.EMPTY))
                     .append(Text.empty()
-                            .append(TextUtils.formatted("Discord Link " + (i + 0)))
+                            .append(TextUtils.formatted("Discord Link "))
                             .setStyle(Style.EMPTY
-                                    .withColor(Formatting.BLUE)
+                                    .withColor(Formatting.DARK_PURPLE)
                                     .withUnderline(true)
                                     .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, discordLinks[i]))
                             )
