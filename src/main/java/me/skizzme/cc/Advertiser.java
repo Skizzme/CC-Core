@@ -15,7 +15,7 @@ public class Advertiser {
             Text.empty()
                     .append(TextUtils.formatted("&7Don't forget to do "))
                     .append(
-                            Text.literal("/vote")
+                            Text.literal("/votelinks")
                                     .setStyle(
                                             Style.EMPTY
                                                     .withColor(Formatting.AQUA)
