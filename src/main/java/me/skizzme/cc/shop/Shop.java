@@ -315,12 +315,11 @@ public class Shop {
 
     public static void logTransaction(boolean buy, ServerPlayerEntity player, Item item, ItemInfo itemInfo, int amount) {
         float price = amount * (buy ? itemInfo.getPrice() : (itemInfo.getPrice() * itemInfo.getSellPercent()));
-        FileUtils.appendFile("shop_transactions.txt", "[" + TimeUtils.getTimeDefault() + "] " + player.getGameProfile().getName() + " " + (buy ? "purchased" : "sold") + " " + amount + " of " + item.getTranslationKey() + " for " + price + "\n");
+        FileUtils.appendFile("shop_transactions.txt", "[" + StringUtils.getTimeDefault() + "] " + player.getGameProfile().getName() + " " + (buy ? "purchased" : "sold") + " " + amount + " of " + item.getTranslationKey() + " for " + price + "\n");
 
         Text msg = Text.empty()
                 .append(CCCore.PREFIX)
-                .append(" ")
-                .append(Text.empty().append(player.getName()).formatted(Formatting.GREEN))
+                .append(TextUtils.teleportableName(player, Formatting.GREEN))
                 .append(TextUtils.formatted(buy ? " &7purchased " : " &7sold "))
                 .append(TextUtils.formatted("&9" + amount +" &7of "))
                 .append(Text.empty().append(item.getName()).formatted(Formatting.DARK_GRAY))

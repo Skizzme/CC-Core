@@ -58,7 +58,7 @@ public class CCCore implements ModInitializer {
 		AdvertiserCommand.register(dispatcher);
 		ApplyCommand.register(dispatcher);
 		BroadcastCommand.register(dispatcher);
-		MessageCommand.register(dispatcher);
+		PerformanceCommand.register(dispatcher);
 
 		LOGGER.info("Registered commands");
 	}

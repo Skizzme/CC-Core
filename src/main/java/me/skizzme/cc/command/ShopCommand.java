@@ -60,7 +60,7 @@ public class ShopCommand {
             } else {
                 Shop.TRANSACTION_NOTIFS.add(player);
             }
-            player.sendMessage(TextUtils.formatted("&7You will " + (Shop.TRANSACTION_NOTIFS.contains(player) ? "&cno longer " : "&a now") + " &7be notified of shop transactions."));
+            player.sendMessage(TextUtils.formatted("&7You will " + ((!Shop.TRANSACTION_NOTIFS.contains(player)) ? "&cno longer " : "&anow") + " &7be notified of shop transactions."));
         }
         return 1;
     }
