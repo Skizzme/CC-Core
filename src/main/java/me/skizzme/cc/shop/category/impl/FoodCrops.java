@@ -81,6 +81,7 @@ public class FoodCrops extends Category {
             Items.RABBIT_STEW,
             Items.MILK_BUCKET,
             Items.HONEY_BOTTLE,
+            Items.WHEAT,
 
             CobblemonItems.MEDICINAL_LEEK,
             CobblemonItems.BIG_ROOT,

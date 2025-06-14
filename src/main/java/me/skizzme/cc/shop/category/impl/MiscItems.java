@@ -22,6 +22,8 @@ public class MiscItems extends Category {
                 BUCKET,
                 LAVA_BUCKET,
                 WATER_BUCKET,
+                LANTERN,
+                SOUL_LANTERN,
                 ROTTEN_FLESH,
                 BONE,
                 STRING,

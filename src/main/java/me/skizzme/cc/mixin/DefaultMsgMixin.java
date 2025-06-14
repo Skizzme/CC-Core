@@ -12,6 +12,5 @@ public class DefaultMsgMixin {
 	@Inject(at = @At("HEAD"), method = "register", cancellable = true)
 	private static void init(CallbackInfo info) {
 		info.cancel();
-		// This code is injected into the start of MinecraftServer.loadWorld()V
 	}
 }
