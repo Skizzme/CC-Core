@@ -37,7 +37,7 @@ public class DiscordCommand {
                     .append(Text.empty()
                             .append(TextUtils.formatted("Discord Link"))
                             .setStyle(Style.EMPTY
-                                    .withColor(Formatting.DARK_PURPLE)
+                                    .withColor(Formatting.BLUE)
                                     .withUnderline(true)
                                     .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, discordLinks[i]))
                             )

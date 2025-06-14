@@ -27,7 +27,7 @@ public class ApplyCommand {
         ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
         String[][] applyLinks = {
                 {"https://forms.gle/dA1SLm5XGZdKpyPC9","&eHelper Application"},
-                {"https://forms.gle/nbf2cGgsnk8XAkER8","&6Builder Application"}
+                {"https://forms.gle/nbf2cGgsnk8XAkER8","&9Builder Application"}
         };
 
         player.sendMessage(TextUtils.formatted("&7Select Your Application Below:"));

@@ -10,10 +10,7 @@ import com.google.gson.JsonObject;
 import me.skizzme.cc.CCCore;
 import me.skizzme.cc.shop.category.Category;
 import me.skizzme.cc.shop.category.impl.*;
-import me.skizzme.cc.util.ConfigUtils;
-import me.skizzme.cc.util.GuiUtils;
-import me.skizzme.cc.util.ItemBuilder;
-import me.skizzme.cc.util.TextUtils;
+import me.skizzme.cc.util.*;
 import net.impactdev.impactor.api.economy.EconomyService;
 import net.impactdev.impactor.api.economy.accounts.Account;
 import net.impactdev.impactor.api.economy.transactions.EconomyTransaction;
@@ -33,12 +30,14 @@ import java.awt.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
 
 public class Shop {
 
     private static JsonObject prices;
     private static final String PRICE_CONFIG_PATH = "shop_prices.json";
+    public static final HashSet<ServerPlayerEntity> TRANSACTION_NOTIFS = new HashSet<>();
 
     private static final Category[] categories = {
             new BuildingBlocks(),
@@ -247,47 +246,8 @@ public class Shop {
                         )
                         .onClick((ac) ->
                         {
-                            try {
-                                Account a = EconomyService.instance().account(ac.getPlayer().getUuid()).get();
-                                if (buy) {
-                                    EconomyTransaction result = a.withdraw(BigDecimal.valueOf(itemInfo.getPrice() * amount));
-
-                                    if (result.result() == EconomyResultType.SUCCESS) {
-                                        ac.getPlayer().giveItemStack(ItemBuilder.plain(item, amount));
-                                        ac.getPlayer().playSoundToPlayer(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.AMBIENT, 0.4f, 2.0f);
-                                        ac.getPlayer().sendMessage(
-                                                Text.empty()
-                                                        .append(TextUtils.formatted("&7Successfully &9purchased &a" + CCCore.INT_FORMAT.format(amount) + "x &8"))
-                                                        .append(item.getName())
-                                                        .formatted(Formatting.DARK_GRAY)
-                                                        .append(TextUtils.formatted("&7 for &a" + CCCore.MONEY_FORMAT.format(itemInfo.getPrice() * amount)))
-                                        );
-                                    } else if (result.result() == EconomyResultType.NOT_ENOUGH_FUNDS) {
-                                        ac.getPlayer().sendMessage(TextUtils.formatted("&cNot enough funds"));
-                                        ac.getPlayer().playSoundToPlayer(SoundEvents.ENTITY_VILLAGER_NO, SoundCategory.AMBIENT, 0.4f, 1.0f);
-                                    }
-                                } else {
-                                    // TODO
-//                            ac.getPlayer().getInventory().removeStack()
-                                    int removed = Inventories.remove(ac.getPlayer().getInventory(), (s) -> s.getItem() == item, amount, false);
-                                    if (removed == 0) {
-                                        return;
-                                    }
-                                    float deposit = itemInfo.getPrice() * itemInfo.getSellPercent() * removed;
-                                    EconomyTransaction result = a.deposit(BigDecimal.valueOf(deposit));
-                                    ac.getPlayer().sendMessage(
-                                            Text.empty()
-                                                    .append(TextUtils.formatted("&7Successfully &csold &a" + CCCore.INT_FORMAT.format(removed) + "x &8"))
-                                                    .append(item.getName())
-                                                    .formatted(Formatting.DARK_GRAY)
-                                                    .append(TextUtils.formatted("&7 for &a" + CCCore.MONEY_FORMAT.format(deposit)))
-                                    );
-                                    ac.getPlayer().getInventory().updateItems();
-                                    itemTransaction(previousPage, player, item, itemInfo, amount, buy);
-                                }
-                            } catch (Exception e) {
-
-                            }
+                            completeTransaction(buy, ac.getPlayer(), item, itemInfo, amount);
+                            itemTransaction(previousPage, player, item, itemInfo, amount, buy);
                         })
                         .build()
         );
@@ -306,6 +266,68 @@ public class Shop {
                 .build();
 
         UIManager.openUIForcefully(player, page);
+    }
+    
+    public static void completeTransaction(boolean buy, ServerPlayerEntity player, Item item, ItemInfo itemInfo, int amount) {
+        try {
+            Account a = EconomyService.instance().account(player.getUuid()).get();
+            if (buy) {
+                EconomyTransaction result = a.withdraw(BigDecimal.valueOf(itemInfo.getPrice() * amount));
+
+                if (result.result() == EconomyResultType.SUCCESS) {
+                    player.giveItemStack(ItemBuilder.plain(item, amount));
+                    player.playSoundToPlayer(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.AMBIENT, 0.4f, 2.0f);
+                    player.sendMessage(
+                            Text.empty()
+                                    .append(TextUtils.formatted("&7Successfully &9purchased &a" + CCCore.INT_FORMAT.format(amount) + "x &8"))
+                                    .append(item.getName())
+                                    .formatted(Formatting.DARK_GRAY)
+                                    .append(TextUtils.formatted("&7 for &a" + CCCore.MONEY_FORMAT.format(itemInfo.getPrice() * amount)))
+                    );
+                } else if (result.result() == EconomyResultType.NOT_ENOUGH_FUNDS) {
+                    player.sendMessage(TextUtils.formatted("&cNot enough funds"));
+                    player.playSoundToPlayer(SoundEvents.ENTITY_VILLAGER_NO, SoundCategory.AMBIENT, 0.4f, 1.0f);
+                }
+            } else {
+                // TODO
+//                            player.getInventory().removeStack()
+                int removed = Inventories.remove(player.getInventory(), (s) -> s.getItem() == item, amount, false);
+                if (removed == 0) {
+                    return;
+                }
+                float deposit = itemInfo.getPrice() * itemInfo.getSellPercent() * removed;
+                EconomyTransaction result = a.deposit(BigDecimal.valueOf(deposit));
+                player.sendMessage(
+                        Text.empty()
+                                .append(TextUtils.formatted("&7Successfully &csold &a" + CCCore.INT_FORMAT.format(removed) + "x &8"))
+                                .append(item.getName())
+                                .formatted(Formatting.DARK_GRAY)
+                                .append(TextUtils.formatted("&7 for &a" + CCCore.MONEY_FORMAT.format(deposit)))
+                );
+                player.getInventory().updateItems();
+//                itemTransaction(previousPage, player, item, itemInfo, amount, buy);
+            }
+        } catch (Exception e) {
+
+        }
+        logTransaction(buy, player, item, itemInfo, amount);
+    }
+
+    public static void logTransaction(boolean buy, ServerPlayerEntity player, Item item, ItemInfo itemInfo, int amount) {
+        float price = amount * (buy ? itemInfo.getPrice() : (itemInfo.getPrice() * itemInfo.getSellPercent()));
+        FileUtils.appendFile("shop_transactions.txt", "[" + StringUtils.getTimeDefault() + "] " + player.getGameProfile().getName() + " " + (buy ? "purchased" : "sold") + " " + amount + " of " + item.getTranslationKey() + " for " + price + "\n");
+
+        Text msg = Text.empty()
+                .append(CCCore.PREFIX)
+                .append(TextUtils.teleportableName(player, Formatting.GREEN))
+                .append(TextUtils.formatted(buy ? " &7purchased " : " &7sold "))
+                .append(TextUtils.formatted("&9" + amount +" &7of "))
+                .append(Text.empty().append(item.getName()).formatted(Formatting.DARK_GRAY))
+                .append(TextUtils.formatted("&7 for &a" + CCCore.MONEY_FORMAT.format(price)));
+
+        for (ServerPlayerEntity notif : TRANSACTION_NOTIFS) {
+            notif.sendMessage(msg);
+        }
     }
 
     public static class ItemInfo {

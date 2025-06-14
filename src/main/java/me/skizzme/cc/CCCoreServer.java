@@ -1,6 +1,7 @@
 package me.skizzme.cc;
 
 import me.skizzme.cc.chunkgen.ChunkGenerator;
+import me.skizzme.cc.command.MessageCommand;
 import me.skizzme.cc.command.VoteCommand;
 import me.skizzme.cc.listeners.TransactionListener;
 import me.skizzme.cc.shop.Shop;
@@ -24,11 +25,14 @@ public class CCCoreServer implements DedicatedServerModInitializer {
 			CCCoreServer.server = server;
 			Shop.loadConfig();
 			ChunkGenerator.load(server);
-			ChunkGenerator.chunkLoader(server);
+//			ChunkGenerator.chunkLoader(server);
 			for (ServerWorld world : server.getWorlds()) {
 				System.out.println("TEST: " + world.getRegistryKey().getRegistry() + ", " + world.getRegistryKey().getValue());
 			}
 			VoteCommand.register(server.getCommandManager().getDispatcher());
+			MessageCommand.register(server.getCommandManager().getDispatcher());
+
+			System.out.println("TEST ENFORCE SECURE PROFILE: " + server.shouldEnforceSecureProfile());
 		});
 
 		ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
