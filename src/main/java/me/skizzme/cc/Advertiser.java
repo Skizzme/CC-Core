@@ -15,13 +15,13 @@ public class Advertiser {
             Text.empty()
                     .append(TextUtils.formatted("&7Don't forget to do "))
                     .append(
-                            Text.literal("/vote")
+                            Text.literal("/votelinks")
                                     .setStyle(
                                             Style.EMPTY
                                                     .withColor(Formatting.AQUA)
                                                     .withBold(true)
                                                     .withUnderline(true)
-                                                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vote"))
+                                                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/votelinks"))
                                     )
                     .append(TextUtils.formatted("&7 and get free Vote Crate keys!"))
             ),
