@@ -1,15 +1,11 @@
 package me.skizzme.cc.util;
 
 import com.google.gson.JsonObject;
-import me.skizzme.cc.CCCore;
 import net.fabricmc.loader.api.FabricLoader;
 
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 
 public class ConfigUtils {
 

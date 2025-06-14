@@ -4,16 +4,12 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.suggestion.Suggestions;
 import me.lucko.fabric.api.permissions.v0.Permissions;
-import me.skizzme.cc.CCCore;
 import me.skizzme.cc.shop.Shop;
 import me.skizzme.cc.util.TextUtils;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ChunkTicketType;
-import net.minecraft.world.chunk.ChunkLoader;
 
 public class ShopCommand {
 
@@ -60,7 +56,7 @@ public class ShopCommand {
             } else {
                 Shop.TRANSACTION_NOTIFS.add(player);
             }
-            player.sendMessage(TextUtils.formatted("&7You will " + ((!Shop.TRANSACTION_NOTIFS.contains(player)) ? "&cno longer " : "&anow") + " &7be notified of shop transactions."));
+            player.sendMessage(TextUtils.formatted("&7You will " + ((!Shop.TRANSACTION_NOTIFS.contains(player)) ? "&cno longer" : "&anow") + " &7be notified of shop transactions."));
         }
         return 1;
     }

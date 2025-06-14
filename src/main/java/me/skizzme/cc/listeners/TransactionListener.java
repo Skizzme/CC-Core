@@ -1,5 +1,6 @@
 package me.skizzme.cc.listeners;
 
+import me.skizzme.cc.CCCore;
 import me.skizzme.cc.util.FileUtils;
 import me.skizzme.cc.util.StringUtils;
 import net.impactdev.impactor.api.economy.events.EconomyTransactionEvent;
@@ -15,7 +16,12 @@ public class TransactionListener implements EventSubscriber<EconomyTransactionEv
         if (event.amount().equals(BigDecimal.ZERO)) {
             return;
         }
-        String log = "Amount: " + event.amount() + ", Type: " + event.type().name() + ", User ID: " + event.account().owner()  + ", Balance: " + event.account().balance();
+        String log = "Amount: " + event.amount() +
+                ", Type: " + event.type().name() +
+                ", User ID: " + event.account().owner() +
+                ", Username: " + CCCore.getServer().getPlayerManager().getPlayer(event.account().owner()) +
+                ", Balance: " + event.account().balance();
+
         FileUtils.appendFile("economy_log.txt", "[" + StringUtils.getTimeDefault() + "] " + log + "\n");
     }
 

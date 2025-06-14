@@ -1,24 +1,17 @@
 package me.skizzme.cc.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.ArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.lucko.fabric.api.permissions.v0.Permissions;
-import me.skizzme.cc.CCCore;
 import me.skizzme.cc.chunkgen.ChunkGenerator;
 import me.skizzme.cc.stats.Statistics;
 import me.skizzme.cc.util.CommandUtils;
 import me.skizzme.cc.util.TextUtils;
-import net.impactdev.impactor.api.economy.EconomyService;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-
-import java.math.BigDecimal;
 
 public class ChunkGenCommand {
 

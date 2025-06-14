@@ -11,14 +11,8 @@
 	"icon": "assets/cc-core/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": [
-			"me.skizzme.cc.CCCore"
-		],
-		"fabric-datagen": [
-			"me.skizzme.cc.CCCoreDataGenerator"
-		],
 		"server": [
-			"me.skizzme.cc.CCCoreServer"
+			"me.skizzme.cc.CCCore"
 		]
 	},
 	"mixins": [
