@@ -59,6 +59,7 @@ public class CCCore implements ModInitializer {
 		ApplyCommand.register(dispatcher);
 		BroadcastCommand.register(dispatcher);
 		PerformanceCommand.register(dispatcher);
+		RestartCommand.register(dispatcher);
 
 		LOGGER.info("Registered commands");
 	}
@@ -68,5 +69,10 @@ public class CCCore implements ModInitializer {
 			p.sendMessage(message);
 		}
 		CCCoreServer.getServer().sendMessage(Text.empty().append("[BROADCAST] ").append(message));
+	}
+
+	public static void broadcastPrefix(String message) {
+		Text broadcast = Text.empty().append(CCCore.PREFIX).append(TextUtils.formatted(message));
+        broadcast(broadcast);
 	}
 }

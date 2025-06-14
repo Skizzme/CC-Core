@@ -43,7 +43,7 @@ public class TextUtils {
                         ))
                         .withClickEvent(new ClickEvent(
                                 ClickEvent.Action.RUN_COMMAND,
-                                "/tp " + player.getName()
+                                "/tp " + player.getGameProfile().getName()
                         ))
                         .withFormatting(formattings)
                 );
