@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.lucko.fabric.api.permissions.v0.Permissions;
+import me.skizzme.cc.CCCore;
 import me.skizzme.cc.shop.Shop;
 import me.skizzme.cc.util.TextUtils;
 import net.minecraft.server.command.CommandManager;

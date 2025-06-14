@@ -1,6 +1,7 @@
 package me.skizzme.cc.util;
 
 import com.google.gson.JsonObject;
+import me.skizzme.cc.CCCore;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.IOException;

@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.lucko.fabric.api.permissions.v0.Permissions;
+import me.skizzme.cc.CCCore;
 import me.skizzme.cc.chunkgen.ChunkGenerator;
 import me.skizzme.cc.stats.Statistics;
 import me.skizzme.cc.util.CommandUtils;

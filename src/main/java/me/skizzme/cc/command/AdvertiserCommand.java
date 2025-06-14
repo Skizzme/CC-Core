@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import me.skizzme.cc.Advertiser;
+import me.skizzme.cc.CCCore;
 import me.skizzme.cc.util.CommandUtils;
 import me.skizzme.cc.util.TextUtils;
 import net.minecraft.entity.Entity;
