@@ -17,11 +17,11 @@ import net.minecraft.util.Formatting;
 public class VoteCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         System.out.println("VOTE LINKS");
-//        dispatcher.register(
-//                CommandManager.literal("vote")
-//                        .requires(Permissions.require(CCCore.PERM_ID + ".vote"))
-//                        .executes(VoteCommand::run)
-//        );
+        dispatcher.register(
+                CommandManager.literal("vote")
+                        .requires(Permissions.require(CCCore.PERM_ID + ".vote"))
+                        .executes(VoteCommand::run)
+        );
 
         dispatcher.register(
                 CommandManager.literal("votelinks")

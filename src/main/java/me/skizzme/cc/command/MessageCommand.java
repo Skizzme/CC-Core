@@ -2,8 +2,10 @@ package me.skizzme.cc.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import me.skizzme.cc.CCCore;
 import me.skizzme.cc.util.TextUtils;
@@ -22,7 +24,7 @@ public class MessageCommand {
     private static final HashMap<UUID, UUID> LAST_RECEIVED = new HashMap<>();
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(
+        LiteralCommandNode<ServerCommandSource> n = dispatcher.register(
                 CommandManager.literal("pm")
                         .requires(Permissions.require(CCCore.PERM_ID + ".pm"))
                         .then(CommandManager.argument("target", EntityArgumentType.player())
@@ -33,6 +35,7 @@ public class MessageCommand {
                                 )
                         )
         );
+        dispatcher.register(CommandManager.literal("msg").redirect(n));
         dispatcher.register(
                 CommandManager.literal("r")
                         .requires(Permissions.require(CCCore.PERM_ID + ".pm"))

@@ -3,7 +3,8 @@
 	"package": "me.skizzme.cc.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+		"ExampleMixin",
+		"DefaultMsgMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
