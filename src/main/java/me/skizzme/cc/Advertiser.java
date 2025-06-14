@@ -21,7 +21,7 @@ public class Advertiser {
                                                     .withColor(Formatting.AQUA)
                                                     .withBold(true)
                                                     .withUnderline(true)
-                                                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vote"))
+                                                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/votelinks"))
                                     )
                     .append(TextUtils.formatted("&7 and get free Vote Crate keys!"))
             ),
